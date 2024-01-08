@@ -1,4 +1,4 @@
-package ru.clevertec.knyazev;
+package ru.clevertec.ecl.knyazev;
 
 public class Main {
     public static void main(String[] args) {
