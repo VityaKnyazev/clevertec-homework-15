@@ -1,10 +1,16 @@
 plugins {
     id 'java'
     id 'io.freefair.lombok' version '8.4'
+    id 'org.liquibase.gradle' version '2.2.0'
 }
 
 ext {
     hibernateVersion = '6.4.1.Final'
+
+    postgresqlConVersion = '42.7.1'
+
+    liquibaseVersion = '4.25.0'
+    piocliVersion = '4.7.5'
 }
 
 group = 'ru.clevertec.knyazev'
@@ -17,6 +23,10 @@ repositories {
 dependencies {
     implementation "org.hibernate.orm:hibernate-core:$hibernateVersion"
 
+    liquibaseRuntime "org.liquibase:liquibase-core:$liquibaseVersion"
+    liquibaseRuntime "info.picocli:picocli:$piocliVersion"
+    liquibaseRuntime "org.postgresql:postgresql:$postgresqlConVersion"
+
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
 }
@@ -27,6 +37,18 @@ java {
 
     compileJava.options.encoding = 'UTF-8'
     compileTestJava.options.encoding = 'UTF-8'
+}
+
+liquibase {
+    activities {
+        government {
+            changeLogFile "/src/main/resources/db/liquibase/db-real-estate-changelog.xml"
+            driver "org.postgresql.Driver"
+            url "jdbc:postgresql://localhost:5432/real_estate?useUnicode=true&characterEncoding=UTF-8"
+            username "admin"
+            password "admin"
+        }
+    }
 }
 
 test {

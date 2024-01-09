@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -25,6 +26,9 @@ public class House {
     @OneToOne
     @JoinColumn(name = "address_id", referencedColumnName = "id", nullable = false)
     private Address address;
+
+    @OneToMany(mappedBy = "livingHouse")
+    private List<Person> livingPersons;
 
     @Column(name = "create_date", updatable = false, nullable = false)
     private LocalDateTime createDate;

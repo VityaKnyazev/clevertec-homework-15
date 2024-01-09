@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -36,6 +37,16 @@ public class Person {
     @JoinColumn(name = "passport_id", referencedColumnName = "id", nullable = false)
     private Passport passport;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "house_id", referencedColumnName = "id", nullable = false)
+    private House livingHouse;
+
+    @ManyToMany
+    @JoinTable(name = "persons_houses_possessing",
+            joinColumns = {@JoinColumn(name = "person_id")},
+            inverseJoinColumns = {@JoinColumn(name = "house_id")})
+    private List<House> possessedHouses;
+
     @Column(name = "create_date", updatable = false, nullable = false)
     private LocalDateTime createDate;
 
@@ -43,6 +54,6 @@ public class Person {
     private LocalDateTime updateDate;
 
     public static enum Sex {
-        Male, Female
+        male, female
     }
 }
