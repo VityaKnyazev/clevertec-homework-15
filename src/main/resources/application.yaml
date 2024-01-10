@@ -1,0 +1,18 @@
+#datasource config
+datasource:
+   driverClassName: org.postgresql.Driver
+   jdbcUrl: jdbc:postgresql://localhost:5432/real_estate?useUnicode=true&characterEncoding=UTF-8
+   username: admin
+   password: admin
+   maxPoolSize: 3
+   connectionTimeout: 3000
+#hibernate config
+hibernate:
+   dialect: org.hibernate.dialect.PostgreSQLDialect
+   showSql: false
+   formatSql: true
+   hbm2ddlAuto: none
+#paging config
+paging:
+   defaultPage: 1
+   defaultPageSize: 15
