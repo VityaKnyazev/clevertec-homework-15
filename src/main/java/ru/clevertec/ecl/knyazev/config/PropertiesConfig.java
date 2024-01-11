@@ -4,6 +4,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.clevertec.ecl.knyazev.util.YAMLParser;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 @Configuration
@@ -31,8 +33,8 @@ public class PropertiesConfig {
     }
 
     @Bean
-    Properties hibernateProperties(YAMLParser yamlParser) {
-        Properties properties = new Properties();
+    Map<String, ?> hibernateProperties(YAMLParser yamlParser) {
+        Map<String, Object> properties = new HashMap<>();
 
         properties.put("hibernate.dialect", yamlParser.getProperty("hibernate", "dialect"));
         properties.put("hibernate.show_sql", Boolean.parseBoolean(yamlParser.getProperty("hibernate",

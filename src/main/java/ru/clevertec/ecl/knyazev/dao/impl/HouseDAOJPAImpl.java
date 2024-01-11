@@ -7,9 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
-import ru.clevertec.ecl.knyazev.dao.AddressDAO;
+import ru.clevertec.ecl.knyazev.dao.HouseDAO;
 import ru.clevertec.ecl.knyazev.dao.exception.DAOException;
-import ru.clevertec.ecl.knyazev.entity.Address;
+import ru.clevertec.ecl.knyazev.entity.House;
 import ru.clevertec.ecl.knyazev.pagination.Paging;
 
 import java.util.ArrayList;
@@ -21,9 +21,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Slf4j
-public class AddressDAOJPAImpl implements AddressDAO {
+public class HouseDAOJPAImpl implements HouseDAO {
 
-    private static final String FIND_ALL_QUERY = "SELECT a FROM Address a";
+    private static final String FIND_ALL_QUERY = "SELECT h FROM House h";
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -32,20 +32,20 @@ public class AddressDAOJPAImpl implements AddressDAO {
      * {@inheritDoc}
      */
     @Override
-    public Optional<Address> findByUUID(UUID uuid) {
+    public Optional<House> findByUUID(UUID uuid) {
 
-        Address address = null;
+        House house = null;
 
         try {
-            address = entityManager.find(Address.class, uuid);
+            house = entityManager.find(House.class, uuid);
         } catch (IllegalArgumentException e) {
             log.error(String.format("%s%s: %s",
                     DAOException.ENTITY_NOT_FOUND,
                     uuid,
                     e.getMessage()), e);
         }
-        return address != null
-                ? Optional.of(address)
+        return house != null
+                ? Optional.of(house)
                 : Optional.empty();
     }
 
@@ -53,30 +53,30 @@ public class AddressDAOJPAImpl implements AddressDAO {
      * {@inheritDoc}
      */
     @Override
-    public List<Address> findAll() {
-        List<Address> addresses = new ArrayList<>();
+    public List<House> findAll() {
+        List<House> houses = new ArrayList<>();
 
         try {
-            addresses = entityManager.createQuery(FIND_ALL_QUERY, Address.class)
+            houses = entityManager.createQuery(FIND_ALL_QUERY, House.class)
                     .getResultList();
         } catch (IllegalArgumentException | PersistenceException e) {
             log.error(String.format("%s: %s",
                     DAOException.FIND_ALL_ERROR,
                     e.getMessage()), e);
         }
-        return addresses;
+        return houses;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<Address> findAll(Paging paging) {
+    public List<House> findAll(Paging paging) {
 
-        List<Address> addresses = new ArrayList<>();
+        List<House> houses = new ArrayList<>();
 
         try {
-            addresses = entityManager.createQuery(FIND_ALL_QUERY, Address.class)
+            houses = entityManager.createQuery(FIND_ALL_QUERY, House.class)
                     .setFirstResult(paging.getOffset())
                     .setMaxResults(paging.getLimit())
                     .getResultList();
@@ -85,63 +85,61 @@ public class AddressDAOJPAImpl implements AddressDAO {
                     DAOException.FIND_ALL_ERROR,
                     e.getMessage()), e);
         }
-        return addresses;
+        return houses;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Address save(Address address) throws DAOException {
+    public House save(House house) throws DAOException {
 
         try {
-            entityManager.persist(address);
+            entityManager.persist(house);
         } catch (IllegalArgumentException | PersistenceException e) {
             throw new DAOException(String.format("%s: %s",
                     DAOException.SAVING_ERROR,
                     e.getMessage()), e);
         }
-        return address;
+        return house;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Address update(Address address) throws DAOException {
+    public House update(House house) throws DAOException {
 
-        Address addressDB = findByUUID(address.getUuid())
+        House houseDB = findByUUID(house.getUuid())
                 .orElseThrow(() -> new DAOException(String.format("%s: %s%s",
                         DAOException.UPDATING_ERROR,
                         DAOException.ENTITY_NOT_FOUND,
-                        address.getUuid())));
+                        house.getUuid())));
 
-        addressDB.setUuid(address.getUuid());
-        addressDB.setArea(address.getArea());
-        addressDB.setCountry(address.getCountry());
-        addressDB.setCity(address.getCity());
-        addressDB.setStreet(address.getStreet());
-        addressDB.setNumber(address.getNumber());
+        houseDB.setUuid(house.getUuid());
+        houseDB.setAddress(house.getAddress());
+        houseDB.setLivingPersons(house.getLivingPersons());
+
 
         try {
-            entityManager.merge(addressDB);
+            entityManager.merge(houseDB);
         } catch (IllegalArgumentException | PersistenceException e) {
             throw new DAOException(String.format("%s: %s",
                     DAOException.UPDATING_ERROR,
                     e.getMessage()), e);
         }
-        return addressDB;
+        return houseDB;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void delete(UUID addressUUID) throws DAOException {
+    public void delete(UUID houseUUID) throws DAOException {
 
-        findByUUID(addressUUID).ifPresent(addressDB -> {
+        findByUUID(houseUUID).ifPresent(houseDB -> {
             try {
-                entityManager.remove(addressDB);
+                entityManager.remove(houseDB);
             } catch (IllegalArgumentException | PersistenceException e) {
                 throw new DAOException(String.format("%s: %s",
                         DAOException.DELETING_ERROR,

@@ -80,7 +80,7 @@ INSERT INTO person(uuid, name, surname, sex, passport_id, house_id, create_date)
 INSERT INTO person(uuid, name, surname, sex, passport_id, house_id, create_date) VALUES('41e819ad-21b4-4a82-ba19-952cd6ce85eb', 'James', 'Garcia', 'male', 17, 17, '2023-07-17');
 INSERT INTO person(uuid, name, surname, sex, passport_id, house_id, create_date) VALUES('48e34b41-a248-45fa-bda4-c7ab507c541a', 'Mia', 'Davis', 'female', 18, 18, '2023-07-18');
 INSERT INTO person(uuid, name, surname, sex, passport_id, house_id, create_date) VALUES('3b1bbf7c-6381-4ccb-b866-2b69ccc517eb', 'Benjamin', 'Rodriguez', 'male', 19, 19, '2023-07-19');
-INSERT INTO person(uuid, name, surname, sex, passport_id, house_id, create_date) VALUES('90037542-83c5-4f8a-9b31-7b58db38ad44', 'Chloe', 'Lopez', 'female', 20, 20, '2023-07-20');
+INSERT INTO person(uuid, name, surname, sex, passport_id, house_id, create_date) VALUES('90037542-83c5-4f8a-9b31-7b58db38ad44', 'Chloe', 'Lopez', 'female', 20, 19, '2023-07-20');
 
 INSERT INTO persons_houses_possessing(person_id, house_id) VALUES(1, 1);
 INSERT INTO persons_houses_possessing(person_id, house_id) VALUES(1, 2);

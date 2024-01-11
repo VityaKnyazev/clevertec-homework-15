@@ -10,6 +10,7 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
 import javax.sql.DataSource;
+import java.util.Map;
 import java.util.Properties;
 
 @Configuration
@@ -32,13 +33,12 @@ public class DataSourceConfig {
 
     @Bean
     LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource hikariDataSource,
-                                                                @Qualifier(value = "hibernateProperties")
-                                                                Properties hibernateProperties) {
+                                                                Map<String, ?> hibernateProperties) {
         LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
         entityManagerFactory.setDataSource(hikariDataSource);
         entityManagerFactory.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
         entityManagerFactory.setPackagesToScan(ENTITY_PACKAGES);
-        entityManagerFactory.setJpaProperties(hibernateProperties);
+        entityManagerFactory.setJpaPropertyMap(hibernateProperties);
         return entityManagerFactory;
     }
 

@@ -7,9 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
-import ru.clevertec.ecl.knyazev.dao.AddressDAO;
+import ru.clevertec.ecl.knyazev.dao.PersonDAO;
 import ru.clevertec.ecl.knyazev.dao.exception.DAOException;
-import ru.clevertec.ecl.knyazev.entity.Address;
+import ru.clevertec.ecl.knyazev.entity.Person;
 import ru.clevertec.ecl.knyazev.pagination.Paging;
 
 import java.util.ArrayList;
@@ -21,9 +21,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Slf4j
-public class AddressDAOJPAImpl implements AddressDAO {
+public class PersonDAOJPAImpl implements PersonDAO {
 
-    private static final String FIND_ALL_QUERY = "SELECT a FROM Address a";
+    private static final String FIND_ALL_QUERY = "SELECT p FROM Person p";
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -32,20 +32,20 @@ public class AddressDAOJPAImpl implements AddressDAO {
      * {@inheritDoc}
      */
     @Override
-    public Optional<Address> findByUUID(UUID uuid) {
+    public Optional<Person> findByUUID(UUID uuid) {
 
-        Address address = null;
+        Person person = null;
 
         try {
-            address = entityManager.find(Address.class, uuid);
+            person = entityManager.find(Person.class, uuid);
         } catch (IllegalArgumentException e) {
             log.error(String.format("%s%s: %s",
                     DAOException.ENTITY_NOT_FOUND,
                     uuid,
                     e.getMessage()), e);
         }
-        return address != null
-                ? Optional.of(address)
+        return person != null
+                ? Optional.of(person)
                 : Optional.empty();
     }
 
@@ -53,30 +53,30 @@ public class AddressDAOJPAImpl implements AddressDAO {
      * {@inheritDoc}
      */
     @Override
-    public List<Address> findAll() {
-        List<Address> addresses = new ArrayList<>();
+    public List<Person> findAll() {
+        List<Person> persons = new ArrayList<>();
 
         try {
-            addresses = entityManager.createQuery(FIND_ALL_QUERY, Address.class)
+            persons = entityManager.createQuery(FIND_ALL_QUERY, Person.class)
                     .getResultList();
         } catch (IllegalArgumentException | PersistenceException e) {
             log.error(String.format("%s: %s",
                     DAOException.FIND_ALL_ERROR,
                     e.getMessage()), e);
         }
-        return addresses;
+        return persons;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<Address> findAll(Paging paging) {
+    public List<Person> findAll(Paging paging) {
 
-        List<Address> addresses = new ArrayList<>();
+        List<Person> persons = new ArrayList<>();
 
         try {
-            addresses = entityManager.createQuery(FIND_ALL_QUERY, Address.class)
+            persons = entityManager.createQuery(FIND_ALL_QUERY, Person.class)
                     .setFirstResult(paging.getOffset())
                     .setMaxResults(paging.getLimit())
                     .getResultList();
@@ -85,63 +85,66 @@ public class AddressDAOJPAImpl implements AddressDAO {
                     DAOException.FIND_ALL_ERROR,
                     e.getMessage()), e);
         }
-        return addresses;
+        return persons;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Address save(Address address) throws DAOException {
+    public Person save(Person person) throws DAOException {
 
         try {
-            entityManager.persist(address);
+            entityManager.persist(person);
         } catch (IllegalArgumentException | PersistenceException e) {
             throw new DAOException(String.format("%s: %s",
                     DAOException.SAVING_ERROR,
                     e.getMessage()), e);
         }
-        return address;
+        return person;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Address update(Address address) throws DAOException {
+    public Person update(Person person) throws DAOException {
 
-        Address addressDB = findByUUID(address.getUuid())
+        Person personDB = findByUUID(person.getUuid())
                 .orElseThrow(() -> new DAOException(String.format("%s: %s%s",
                         DAOException.UPDATING_ERROR,
                         DAOException.ENTITY_NOT_FOUND,
-                        address.getUuid())));
+                        person.getUuid())));
 
-        addressDB.setUuid(address.getUuid());
-        addressDB.setArea(address.getArea());
-        addressDB.setCountry(address.getCountry());
-        addressDB.setCity(address.getCity());
-        addressDB.setStreet(address.getStreet());
-        addressDB.setNumber(address.getNumber());
+        personDB.setUuid(person.getUuid());
+        personDB.setName(person.getName());
+        personDB.setSurname(person.getSurname());
+        personDB.setSex(person.getSex());
+        personDB.setPassport(person.getPassport());
+        personDB.setLivingHouse(person.getLivingHouse());
+        personDB.setPossessedHouses(person.getPossessedHouses());
+        personDB.setUpdateDate(person.getUpdateDate());
+
 
         try {
-            entityManager.merge(addressDB);
+            entityManager.merge(personDB);
         } catch (IllegalArgumentException | PersistenceException e) {
             throw new DAOException(String.format("%s: %s",
                     DAOException.UPDATING_ERROR,
                     e.getMessage()), e);
         }
-        return addressDB;
+        return personDB;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void delete(UUID addressUUID) throws DAOException {
+    public void delete(UUID personUUID) throws DAOException {
 
-        findByUUID(addressUUID).ifPresent(addressDB -> {
+        findByUUID(personUUID).ifPresent(personDB -> {
             try {
-                entityManager.remove(addressDB);
+                entityManager.remove(personDB);
             } catch (IllegalArgumentException | PersistenceException e) {
                 throw new DAOException(String.format("%s: %s",
                         DAOException.DELETING_ERROR,

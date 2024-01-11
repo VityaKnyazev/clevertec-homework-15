@@ -9,8 +9,8 @@ datasource:
 #hibernate config
 hibernate:
    dialect: org.hibernate.dialect.PostgreSQLDialect
-   showSql: false
-   formatSql: true
+   showSql: true
+   formatSql: false
    hbm2ddlAuto: none
 #paging config
 paging:
