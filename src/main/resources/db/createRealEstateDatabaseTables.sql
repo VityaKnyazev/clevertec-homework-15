@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS house
     create_date TIMESTAMPTZ NOT NULL,
 
     UNIQUE (uuid),
+    UNIQUE (address_id),
     PRIMARY KEY (id),
 
     CONSTRAINT fk_address
