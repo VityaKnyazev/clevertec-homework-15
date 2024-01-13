@@ -23,6 +23,7 @@ import java.util.UUID;
 @Slf4j
 public class AddressDAOJPAImpl implements AddressDAO {
 
+    private static final String FIND_BY_UUID_QUERY = "SELECT a FROM Address a WHERE a.uuid = :uuid";
     private static final String FIND_ALL_QUERY = "SELECT a FROM Address a";
 
     @PersistenceContext
@@ -37,8 +38,10 @@ public class AddressDAOJPAImpl implements AddressDAO {
         Address address = null;
 
         try {
-            address = entityManager.find(Address.class, uuid);
-        } catch (IllegalArgumentException e) {
+            address = entityManager.createQuery(FIND_BY_UUID_QUERY, Address.class)
+                    .setParameter("uuid", uuid)
+                    .getSingleResult();
+        } catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
             log.error(String.format("%s%s: %s",
                     DAOException.ENTITY_NOT_FOUND,
                     uuid,
@@ -116,7 +119,6 @@ public class AddressDAOJPAImpl implements AddressDAO {
                         DAOException.ENTITY_NOT_FOUND,
                         address.getUuid())));
 
-        addressDB.setUuid(address.getUuid());
         addressDB.setArea(address.getArea());
         addressDB.setCountry(address.getCountry());
         addressDB.setCity(address.getCity());

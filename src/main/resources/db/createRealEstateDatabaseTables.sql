@@ -8,7 +8,11 @@ CREATE TABLE IF NOT EXISTS address
     street  CHARACTER VARYING(30) NOT NULL,
     number  INTEGER               NOT NULL,
 
-    check (number > 0),
+    CHECK (length(area) >= 3),
+    CHECK (length(country) >= 3),
+    CHECK (length(city) >= 3),
+    CHECK (length(street) >= 3),
+    CHECK (number > 0),
 
     UNIQUE (uuid),
     UNIQUE (country, city, street, number),
@@ -38,6 +42,11 @@ CREATE TABLE IF NOT EXISTS passport
     uuid            UUID                 NOT NULL,
     passport_series CHARACTER VARYING(2) NOT NULL,
     passport_number CHARACTER VARYING(7) NOT NULL,
+    create_date     TIMESTAMPTZ          NOT NULL,
+    update_date     TIMESTAMPTZ,
+
+    CHECK (passport_series ~* '^[A-Z]{2}$'),
+    CHECK (passport_number ~* '^[0-9]{7}$'),
 
     UNIQUE (uuid),
     UNIQUE (passport_series, passport_number),
@@ -53,10 +62,15 @@ CREATE TABLE IF NOT EXISTS person
     sex         CHARACTER VARYING(6)  NOT NULL,
     passport_id BIGSERIAL             NOT NULL,
     house_id    BIGSERIAL             NOT NULL,
-    create_date TIMESTAMPTZ           NOT NULL,
-    update_date TIMESTAMPTZ,
+
+    CHECK (length(name) >= 3),
+    CHECK (length(surname) >= 3),
+
+    CHECK (sex ~* '^(male|female)$'),
+
 
     UNIQUE (uuid),
+    UNIQUE (passport_id),
     PRIMARY KEY (id),
 
     CONSTRAINT fk_passport

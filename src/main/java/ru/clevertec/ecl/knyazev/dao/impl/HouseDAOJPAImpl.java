@@ -6,12 +6,16 @@ import jakarta.persistence.PersistenceException;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import ru.clevertec.ecl.knyazev.dao.AddressDAO;
 import ru.clevertec.ecl.knyazev.dao.HouseDAO;
 import ru.clevertec.ecl.knyazev.dao.exception.DAOException;
+import ru.clevertec.ecl.knyazev.entity.Address;
 import ru.clevertec.ecl.knyazev.entity.House;
 import ru.clevertec.ecl.knyazev.pagination.Paging;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,10 +27,18 @@ import java.util.UUID;
 @Slf4j
 public class HouseDAOJPAImpl implements HouseDAO {
 
+    private static final String FIND_BY_UUID_QUERY = "SELECT h FROM House h WHERE h.uuid = :uuid";
     private static final String FIND_ALL_QUERY = "SELECT h FROM House h";
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    private AddressDAO addressDAOJPAImpl;
+
+    @Autowired
+    private HouseDAOJPAImpl(AddressDAO addressDAOJPAImpl) {
+        this.addressDAOJPAImpl = addressDAOJPAImpl;
+    }
 
     /**
      * {@inheritDoc}
@@ -37,8 +49,10 @@ public class HouseDAOJPAImpl implements HouseDAO {
         House house = null;
 
         try {
-            house = entityManager.find(House.class, uuid);
-        } catch (IllegalArgumentException e) {
+            house = entityManager.createQuery(FIND_BY_UUID_QUERY, House.class)
+                    .setParameter("uuid", uuid)
+                    .getSingleResult();
+        } catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
             log.error(String.format("%s%s: %s",
                     DAOException.ENTITY_NOT_FOUND,
                     uuid,
@@ -94,6 +108,16 @@ public class HouseDAOJPAImpl implements HouseDAO {
     @Override
     public House save(House house) throws DAOException {
 
+        UUID addressUUID = house.getAddress().getUuid();
+        Address houseAddress = addressDAOJPAImpl.findByUUID(addressUUID)
+                .orElseThrow(() -> new DAOException(String.format("%s: %s%s",
+                        DAOException.SAVING_ERROR,
+                        DAOException.ENTITY_NOT_FOUND,
+                        addressUUID)));
+
+        house.setAddress(houseAddress);
+        house.setCreateDate(LocalDateTime.now());
+
         try {
             entityManager.persist(house);
         } catch (IllegalArgumentException | PersistenceException e) {
@@ -116,9 +140,14 @@ public class HouseDAOJPAImpl implements HouseDAO {
                         DAOException.ENTITY_NOT_FOUND,
                         house.getUuid())));
 
-        houseDB.setUuid(house.getUuid());
-        houseDB.setAddress(house.getAddress());
-        houseDB.setLivingPersons(house.getLivingPersons());
+        UUID addressUUID = house.getAddress().getUuid();
+        Address houseAddress = addressDAOJPAImpl.findByUUID(addressUUID)
+                .orElseThrow(() -> new DAOException(String.format("%s: %s%s",
+                        DAOException.UPDATING_ERROR,
+                        DAOException.ENTITY_NOT_FOUND,
+                        addressUUID)));
+
+        houseDB.setAddress(houseAddress);
 
 
         try {

@@ -9,6 +9,8 @@ ext {
 
     hibernateVersion = '6.4.1.Final'
 
+    hibernateValidatorVersion = '8.0.1.Final'
+
     postgresqlConVersion = '42.7.1'
 
     hikariCpVersion = '5.1.0'
@@ -17,6 +19,8 @@ ext {
 
     slf4jApiVersion = '2.0.11'
     logbackVersion = '1.4.14'
+
+    mapStructVersion = '1.5.5.Final'
 
     liquibaseVersion = '4.25.0'
     piocliVersion = '4.7.5'
@@ -35,6 +39,8 @@ dependencies {
 
     implementation "org.hibernate.orm:hibernate-core:$hibernateVersion"
 
+    implementation "org.hibernate.validator:hibernate-validator:$hibernateValidatorVersion"
+
     implementation "org.postgresql:postgresql:$postgresqlConVersion"
 
     implementation "com.zaxxer:HikariCP:$hikariCpVersion"
@@ -43,6 +49,9 @@ dependencies {
 
     implementation "org.slf4j:slf4j-api:$slf4jApiVersion"
     implementation "ch.qos.logback:logback-classic:$logbackVersion"
+
+    implementation "org.mapstruct:mapstruct:$mapStructVersion"
+    annotationProcessor "org.mapstruct:mapstruct-processor:$mapStructVersion"
 
     liquibaseRuntime "org.liquibase:liquibase-core:$liquibaseVersion"
     liquibaseRuntime "info.picocli:picocli:$piocliVersion"
