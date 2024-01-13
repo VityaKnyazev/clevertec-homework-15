@@ -47,12 +47,6 @@ public class Person {
             inverseJoinColumns = {@JoinColumn(name = "house_id")})
     private List<House> possessedHouses;
 
-    @Column(name = "create_date", updatable = false, nullable = false)
-    private LocalDateTime createDate;
-
-    @Column(name = "update_date", insertable = false)
-    private LocalDateTime updateDate;
-
     public static enum Sex {
         male, female
     }

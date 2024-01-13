@@ -12,6 +12,7 @@ import ru.clevertec.ecl.knyazev.dao.exception.DAOException;
 import ru.clevertec.ecl.knyazev.entity.Passport;
 import ru.clevertec.ecl.knyazev.pagination.Paging;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +24,7 @@ import java.util.UUID;
 @Slf4j
 public class PassportDAOJPAImpl implements PassportDAO {
 
+    private static final String FIND_BY_UUID_QUERY = "SELECT p FROM Passport p WHERE p.uuid = :uuid";
     private static final String FIND_ALL_QUERY = "SELECT p FROM Passport p";
 
     @PersistenceContext
@@ -37,8 +39,10 @@ public class PassportDAOJPAImpl implements PassportDAO {
         Passport passport = null;
 
         try {
-            passport = entityManager.find(Passport.class, uuid);
-        } catch (IllegalArgumentException e) {
+            passport = entityManager.createQuery(FIND_BY_UUID_QUERY, Passport.class)
+                    .setParameter("uuid", uuid)
+                    .getSingleResult();
+        } catch (IllegalArgumentException | IllegalStateException | PersistenceException e) {
             log.error(String.format("%s%s: %s",
                     DAOException.ENTITY_NOT_FOUND,
                     uuid,
@@ -94,6 +98,8 @@ public class PassportDAOJPAImpl implements PassportDAO {
     @Override
     public Passport save(Passport passport) throws DAOException {
 
+        passport.setCreateDate(LocalDateTime.now());
+
         try {
             entityManager.persist(passport);
         } catch (IllegalArgumentException | PersistenceException e) {
@@ -117,7 +123,8 @@ public class PassportDAOJPAImpl implements PassportDAO {
                         passport.getUuid())));
 
         passportDB.setPassportSeries(passport.getPassportSeries());
-        passportDB.setPassportSeries(passport.getPassportSeries());
+        passportDB.setPassportNumber(passport.getPassportNumber());
+        passportDB.setUpdateDate(LocalDateTime.now());
 
         try {
             entityManager.merge(passportDB);

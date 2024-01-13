@@ -2,16 +2,15 @@ package ru.clevertec.ecl.knyazev.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
 import javax.sql.DataSource;
 import java.util.Map;
-import java.util.Properties;
 
 @Configuration
 public class DataSourceConfig {
@@ -29,6 +28,11 @@ public class DataSourceConfig {
         hikariConfig.setConnectionTimeout(dataSourceProperties.connectionTimeout());
 
         return new HikariDataSource(hikariConfig);
+    }
+
+    @Bean
+    JdbcTemplate jdbcTemplate(DataSource hikariDataSource) {
+        return new JdbcTemplate(hikariDataSource);
     }
 
     @Bean

@@ -29,4 +29,12 @@ public interface Paging {
      * @return offset for skipping to start fetching records
      */
     Integer getOffset();
+
+    /**
+     *
+     * Determine need should use paging
+     *
+     * @return true if we should use paging, otherwise - false
+     */
+    Boolean usePaging();
 }

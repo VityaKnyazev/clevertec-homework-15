@@ -1,15 +1,14 @@
 package ru.clevertec.ecl.knyazev;
 
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import ru.clevertec.ecl.knyazev.config.AppConfig;
 import ru.clevertec.ecl.knyazev.config.DataSourceConfig;
 import ru.clevertec.ecl.knyazev.config.PropertiesConfig;
-import ru.clevertec.ecl.knyazev.dao.AddressDAO;
-import ru.clevertec.ecl.knyazev.entity.Address;
+import ru.clevertec.ecl.knyazev.data.http.house.response.GetHouseResponseDTO;
+import ru.clevertec.ecl.knyazev.service.HouseService;
 
-import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 public class Main {
@@ -19,11 +18,11 @@ public class Main {
                         DataSourceConfig.class,
                         AppConfig.class);
 
-        AddressDAO addressDAOJPAImpl =
-                annotationConfigApplicationContext.getBean("addressDAOJPAImpl", AddressDAO.class);
+        HouseService houseServiceImpl =
+                annotationConfigApplicationContext.getBean("houseServiceImpl", HouseService.class);
 
-        List<Address> addresses = addressDAOJPAImpl.findAll();
+        GetHouseResponseDTO house = houseServiceImpl.get(UUID.fromString("70847027-c60f-4fb9-a65f-73cb657893b9"));
 
-        addresses.forEach(address -> log.info(address.toString()));
+        log.info(house.toString());
     }
 }

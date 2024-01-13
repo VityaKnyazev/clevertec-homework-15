@@ -8,9 +8,18 @@ public class PagingImpl implements Paging {
     private final Integer page;
     private final Integer pageElements;
 
+    private final Boolean usePaging;
+
     public PagingImpl(Integer page,
                       Integer pageSize,
                       PagingProperties pagingProperties) {
+
+        if (page == null && pageSize == null) {
+            usePaging = true;
+        } else {
+            usePaging = false;
+        }
+
         this.page = (page != null && page > 0)
                 ? page
                 : pagingProperties.defaultPage();
@@ -41,5 +50,13 @@ public class PagingImpl implements Paging {
     @Override
     public Integer getOffset() {
         return page * pageElements - pageElements;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Boolean usePaging() {
+        return usePaging;
     }
 }

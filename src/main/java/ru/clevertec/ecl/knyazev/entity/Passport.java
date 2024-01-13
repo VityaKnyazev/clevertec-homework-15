@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -26,4 +27,10 @@ public class Passport {
 
     @Column(name = "passport_number", nullable = false, length = 7)
     private String passportNumber;
+
+    @Column(name = "create_date", updatable = false, nullable = false)
+    private LocalDateTime createDate;
+
+    @Column(name = "update_date", insertable = false)
+    private LocalDateTime updateDate;
 }
