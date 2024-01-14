@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Repository
 @NoArgsConstructor
@@ -114,6 +115,7 @@ public class PersonDAOJPAImpl implements PersonDAO {
         House livingHouseDB = getPersonLivingHouse(person);
         List<House> possessingHousesDB = getPersonPossessingHouses(person);
 
+        person.setUuid(UUID.randomUUID());
         person.setPassport(passportDB);
         person.setLivingHouse(livingHouseDB);
         person.setPossessedHouses(possessingHousesDB);
@@ -234,6 +236,6 @@ public class PersonDAOJPAImpl implements PersonDAO {
                                 DAOException.SAVING_ERROR,
                                 DAOException.ENTITY_NOT_FOUND,
                                 hUUID))))
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 }

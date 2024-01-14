@@ -33,7 +33,7 @@ public class PagerImpl implements Pager {
         if (paging.usePaging()) {
 
             return inObjCollection.stream()
-                    .skip(paging.getOffset() + 1)
+                    .skip(paging.getOffset())
                     .limit(paging.getLimit())
                     .toList();
         }

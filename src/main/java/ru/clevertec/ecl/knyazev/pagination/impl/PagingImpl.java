@@ -15,9 +15,9 @@ public class PagingImpl implements Paging {
                       PagingProperties pagingProperties) {
 
         if (page == null && pageSize == null) {
-            usePaging = true;
-        } else {
             usePaging = false;
+        } else {
+            usePaging = true;
         }
 
         this.page = (page != null && page > 0)

@@ -1,8 +1,6 @@
 package ru.clevertec.ecl.knyazev.mapper;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Named;
+import org.mapstruct.*;
 import ru.clevertec.ecl.knyazev.data.http.person.request.DeletePersonRequestDTO;
 import ru.clevertec.ecl.knyazev.data.http.person.request.PostPutPersonRequestDTO;
 import ru.clevertec.ecl.knyazev.data.http.person.response.GetPersonResponseDTO;
@@ -29,16 +27,20 @@ public interface PersonMapper {
     default List<House> possessingHouseUUIDsInPerson(List<String> possessingHouseUUIDs) {
         List<House> possessedHouses = new ArrayList<>();
 
-        possessingHouseUUIDs.forEach(hUUID -> possessedHouses.add(House.builder()
-                .uuid(UUID.fromString(hUUID))
-                .build()));
+        if (possessingHouseUUIDs != null && !possessedHouses.isEmpty()) {
+            possessingHouseUUIDs.forEach(hUUID -> possessedHouses.add(House.builder()
+                    .uuid(UUID.fromString(hUUID))
+                    .build()));
+        }
         return possessedHouses;
     }
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "passport.uuid", source = "passportUUID")
     @Mapping(target = "livingHouse.uuid", source = "livingHouseUUID")
-    @Mapping(target = "possessedHouses", source = "possessingHouseUUIDs", qualifiedByName = "possessingHouseUUIDsInPerson")
+    @Mapping(target = "possessedHouses",
+            source = "possessingHouseUUIDs",
+            qualifiedByName = "possessingHouseUUIDsInPerson")
     Person toPerson(PostPutPersonRequestDTO postPutPersonRequestDTO);
 
     default UUID toPersonUUID(DeletePersonRequestDTO deletePersonRequestDTO) {

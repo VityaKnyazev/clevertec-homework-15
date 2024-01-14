@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import org.hibernate.validator.constraints.UUID;
+import ru.clevertec.ecl.knyazev.validation.constraint.ListUUID;
 
 import java.util.List;
 
@@ -49,8 +50,7 @@ public record PostPutPersonRequestDTO(
         @UUID(message = "Invalid person living house UUID. Also must be in lower case")
         String livingHouseUUID,
 
-        @NotNull(message = "Possessing house UUIDs must not be null")
-        @UUID(message = "Invalid person possessing house UUIDs. Also must be in lower case")
+        @ListUUID(message = "Invalid person possessing house UUIDs list. Also must be in lower case")
         List<String> possessingHouseUUIDs
 ) {
 }

@@ -2,10 +2,14 @@ plugins {
     id 'java'
     id 'io.freefair.lombok' version '8.4'
     id 'org.liquibase.gradle' version '2.2.0'
+
+    id 'war'
 }
 
 ext {
     springVersion = '6.1.2'
+
+    jakartaSevletApiVersion = '6.0.0'
 
     hibernateVersion = '6.4.1.Final'
 
@@ -14,6 +18,8 @@ ext {
     postgresqlConVersion = '42.7.1'
 
     hikariCpVersion = '5.1.0'
+
+    gsonVersion = '2.10.1'
 
     snakeyamlVersion = '2.1'
 
@@ -45,6 +51,8 @@ dependencies {
 
     implementation "com.zaxxer:HikariCP:$hikariCpVersion"
 
+    implementation "com.google.code.gson:gson:$gsonVersion"
+
     implementation "org.yaml:snakeyaml:$snakeyamlVersion"
 
     implementation "org.slf4j:slf4j-api:$slf4jApiVersion"
@@ -52,6 +60,8 @@ dependencies {
 
     implementation "org.mapstruct:mapstruct:$mapStructVersion"
     annotationProcessor "org.mapstruct:mapstruct-processor:$mapStructVersion"
+
+    compileOnly "jakarta.servlet:jakarta.servlet-api:$jakartaSevletApiVersion"
 
     liquibaseRuntime "org.liquibase:liquibase-core:$liquibaseVersion"
     liquibaseRuntime "info.picocli:picocli:$piocliVersion"
@@ -64,6 +74,10 @@ java {
 
     compileJava.options.encoding = 'UTF-8'
     compileTestJava.options.encoding = 'UTF-8'
+}
+
+war {
+    archiveFileName = 'app.war'
 }
 
 liquibase {

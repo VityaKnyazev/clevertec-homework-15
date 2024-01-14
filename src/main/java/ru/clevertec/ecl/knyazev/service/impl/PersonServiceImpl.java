@@ -86,7 +86,7 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public GetPersonResponseDTO update(PostPutPersonRequestDTO postPutPersonRequestDTO) {
         return personMapperImpl.toGetPersonResponseDto(
-                personDAOJPAImpl.save(
+                personDAOJPAImpl.update(
                         personMapperImpl.toPerson(postPutPersonRequestDTO)));
     }
 
