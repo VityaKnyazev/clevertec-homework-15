@@ -98,6 +98,7 @@ public class PassportDAOJPAImpl implements PassportDAO {
     @Override
     public Passport save(Passport passport) throws DAOException {
 
+        passport.setUuid(UUID.randomUUID());
         passport.setCreateDate(LocalDateTime.now());
 
         try {

@@ -97,6 +97,8 @@ public class AddressDAOJPAImpl implements AddressDAO {
     @Override
     public Address save(Address address) throws DAOException {
 
+        address.setUuid(UUID.randomUUID());
+
         try {
             entityManager.persist(address);
         } catch (IllegalArgumentException | PersistenceException e) {

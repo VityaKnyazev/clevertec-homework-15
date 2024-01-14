@@ -115,6 +115,7 @@ public class HouseDAOJPAImpl implements HouseDAO {
                         DAOException.ENTITY_NOT_FOUND,
                         addressUUID)));
 
+        house.setUuid(UUID.randomUUID());
         house.setAddress(houseAddress);
         house.setCreateDate(LocalDateTime.now());
 
