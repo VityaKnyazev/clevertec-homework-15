@@ -5,7 +5,7 @@ import ru.clevertec.ecl.knyazev.data.http.house.request.DeleteHouseRequestDTO;
 import ru.clevertec.ecl.knyazev.data.http.house.request.PostPutHouseRequestDTO;
 import ru.clevertec.ecl.knyazev.data.http.house.response.GetHouseResponseDTO;
 import ru.clevertec.ecl.knyazev.data.http.person.response.GetPersonResponseDTO;
-import ru.clevertec.ecl.knyazev.pagination.Paging;
+import ru.clevertec.ecl.knyazev.data.domain.pagination.Paging;
 
 import java.util.List;
 import java.util.UUID;

@@ -14,7 +14,7 @@ import ru.clevertec.ecl.knyazev.dao.exception.DAOException;
 import ru.clevertec.ecl.knyazev.entity.House;
 import ru.clevertec.ecl.knyazev.entity.Passport;
 import ru.clevertec.ecl.knyazev.entity.Person;
-import ru.clevertec.ecl.knyazev.pagination.Paging;
+import ru.clevertec.ecl.knyazev.data.domain.pagination.Paging;
 
 import java.util.ArrayList;
 import java.util.List;

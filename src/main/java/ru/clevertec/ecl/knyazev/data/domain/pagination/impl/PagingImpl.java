@@ -1,7 +1,7 @@
-package ru.clevertec.ecl.knyazev.pagination.impl;
+package ru.clevertec.ecl.knyazev.data.domain.pagination.impl;
 
 import ru.clevertec.ecl.knyazev.config.PagingProperties;
-import ru.clevertec.ecl.knyazev.pagination.Paging;
+import ru.clevertec.ecl.knyazev.data.domain.pagination.Paging;
 
 public class PagingImpl implements Paging {
 

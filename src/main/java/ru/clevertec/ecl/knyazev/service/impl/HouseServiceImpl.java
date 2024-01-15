@@ -12,8 +12,8 @@ import ru.clevertec.ecl.knyazev.data.http.person.response.GetPersonResponseDTO;
 import ru.clevertec.ecl.knyazev.entity.Person;
 import ru.clevertec.ecl.knyazev.mapper.HouseMapper;
 import ru.clevertec.ecl.knyazev.mapper.PersonMapper;
-import ru.clevertec.ecl.knyazev.pagination.Pager;
-import ru.clevertec.ecl.knyazev.pagination.Paging;
+import ru.clevertec.ecl.knyazev.data.domain.pagination.Pager;
+import ru.clevertec.ecl.knyazev.data.domain.pagination.Paging;
 import ru.clevertec.ecl.knyazev.service.HouseService;
 import ru.clevertec.ecl.knyazev.service.exception.ServiceException;
 

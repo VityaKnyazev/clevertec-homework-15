@@ -3,7 +3,7 @@ package ru.clevertec.ecl.knyazev.service;
 import ru.clevertec.ecl.knyazev.data.http.address.request.DeleteAddressRequestDTO;
 import ru.clevertec.ecl.knyazev.data.http.address.request.PostPutAddressRequestDTO;
 import ru.clevertec.ecl.knyazev.data.http.address.response.GetAddressResponseDTO;
-import ru.clevertec.ecl.knyazev.pagination.Paging;
+import ru.clevertec.ecl.knyazev.data.domain.pagination.Paging;
 import ru.clevertec.ecl.knyazev.service.exception.ServiceException;
 
 import java.util.List;

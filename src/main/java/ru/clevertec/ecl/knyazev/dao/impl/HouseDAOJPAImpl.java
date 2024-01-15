@@ -13,7 +13,7 @@ import ru.clevertec.ecl.knyazev.dao.HouseDAO;
 import ru.clevertec.ecl.knyazev.dao.exception.DAOException;
 import ru.clevertec.ecl.knyazev.entity.Address;
 import ru.clevertec.ecl.knyazev.entity.House;
-import ru.clevertec.ecl.knyazev.pagination.Paging;
+import ru.clevertec.ecl.knyazev.data.domain.pagination.Paging;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import ru.clevertec.ecl.knyazev.dao.AddressDAO;
 import ru.clevertec.ecl.knyazev.dao.exception.DAOException;
 import ru.clevertec.ecl.knyazev.entity.Address;
-import ru.clevertec.ecl.knyazev.pagination.Paging;
+import ru.clevertec.ecl.knyazev.data.domain.pagination.Paging;
 
 import java.util.ArrayList;
 import java.util.List;
