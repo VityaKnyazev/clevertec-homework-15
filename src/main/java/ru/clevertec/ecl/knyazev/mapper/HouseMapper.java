@@ -2,13 +2,11 @@ package ru.clevertec.ecl.knyazev.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import ru.clevertec.ecl.knyazev.data.http.house.request.DeleteHouseRequestDTO;
 import ru.clevertec.ecl.knyazev.data.http.house.request.PostPutHouseRequestDTO;
 import ru.clevertec.ecl.knyazev.data.http.house.response.GetHouseResponseDTO;
 import ru.clevertec.ecl.knyazev.entity.House;
 
 import java.util.List;
-import java.util.UUID;
 
 @Mapper(componentModel = "spring")
 public interface HouseMapper {
@@ -28,8 +26,4 @@ public interface HouseMapper {
     @Mapping(target = "livingPersons", ignore = true)
     @Mapping(target = "createDate", ignore = true)
     House toHouse(PostPutHouseRequestDTO postPutHouseRequestDTO);
-
-    default UUID toHouseUUID(DeleteHouseRequestDTO deleteHouseRequestDTO) {
-        return UUID.fromString(deleteHouseRequestDTO.uuid());
-    }
 }

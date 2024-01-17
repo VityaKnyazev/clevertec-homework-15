@@ -9,8 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import ru.clevertec.ecl.knyazev.dao.PassportDAO;
 import ru.clevertec.ecl.knyazev.dao.exception.DAOException;
-import ru.clevertec.ecl.knyazev.entity.Passport;
 import ru.clevertec.ecl.knyazev.data.domain.pagination.Paging;
+import ru.clevertec.ecl.knyazev.entity.Passport;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

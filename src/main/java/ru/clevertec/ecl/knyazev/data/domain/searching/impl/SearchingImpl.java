@@ -18,10 +18,11 @@ public class SearchingImpl implements Searching {
     private static final String MIDDLE_DATA_QUERY = "%%s%";
     private static final String END_DATA_QUERY = "%%s";
 
+    private static final String WHERE = " WHERE ";
     private static final String OR = " OR ";
 
     private final String searchData;
-    private final ArrayDeque<String> searchDataValues = new ArrayDeque<>(3){{
+    private final ArrayDeque<String> searchDataValues = new ArrayDeque<>(3) {{
         addFirst(BEGIN_DATA_QUERY);
         addLast(MIDDLE_DATA_QUERY);
         addLast(END_DATA_QUERY);
@@ -40,9 +41,8 @@ public class SearchingImpl implements Searching {
     }
 
     /**
-     *
      * Get SQL searching query part.
-     * Example: name LIKE ? OR name LIKE ? OR name LIKE ?
+     * Example: WHERE name LIKE ? OR name LIKE ? OR name LIKE ?
      *
      * @param fields fields on which searching will be going on
      * @return string query SQL part for searching on give fields
@@ -56,7 +56,7 @@ public class SearchingImpl implements Searching {
         }
 
         return (fields != null && !fields.isEmpty())
-                ? fields.stream()
+                ? WHERE + fields.stream()
                 .map(field -> String.format(SQL_SEARCH_QUERY, field))
                 .map(query -> query + OR)
                 .collect(Collectors.joining())
@@ -65,7 +65,6 @@ public class SearchingImpl implements Searching {
     }
 
     /**
-     *
      * Get searching value from searching data infinite queue
      * Example: %val or val% or %val%
      *

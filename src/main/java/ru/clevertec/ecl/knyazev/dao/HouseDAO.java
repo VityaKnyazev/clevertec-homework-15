@@ -1,8 +1,9 @@
 package ru.clevertec.ecl.knyazev.dao;
 
 import ru.clevertec.ecl.knyazev.dao.exception.DAOException;
-import ru.clevertec.ecl.knyazev.entity.House;
 import ru.clevertec.ecl.knyazev.data.domain.pagination.Paging;
+import ru.clevertec.ecl.knyazev.data.domain.searching.Searching;
+import ru.clevertec.ecl.knyazev.entity.House;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,12 +34,16 @@ public interface HouseDAO {
 
     /**
      *
-     * Find all houses on given paging data
+     * Find all houses or find all houses
+     * on given paging data
+     * and searching data
      *
      * @param paging paging param
-     * @return all houses on given paging query or empty list
+     * @param searching searching param
+     * @return all houses or all houses on given paging data
+     * and searching data or empty list
      */
-    List<House> findAll(Paging paging);
+    List<House> findAll(Paging paging, Searching searching);
 
     /**
      *

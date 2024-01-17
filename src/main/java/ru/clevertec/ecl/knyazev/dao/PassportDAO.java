@@ -1,8 +1,8 @@
 package ru.clevertec.ecl.knyazev.dao;
 
 import ru.clevertec.ecl.knyazev.dao.exception.DAOException;
-import ru.clevertec.ecl.knyazev.entity.Passport;
 import ru.clevertec.ecl.knyazev.data.domain.pagination.Paging;
+import ru.clevertec.ecl.knyazev.entity.Passport;
 
 import java.util.List;
 import java.util.Optional;

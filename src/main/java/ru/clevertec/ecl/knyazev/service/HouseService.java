@@ -1,11 +1,12 @@
 package ru.clevertec.ecl.knyazev.service;
 
 import org.hibernate.service.spi.ServiceException;
+import ru.clevertec.ecl.knyazev.data.domain.pagination.Paging;
+import ru.clevertec.ecl.knyazev.data.domain.searching.Searching;
 import ru.clevertec.ecl.knyazev.data.http.house.request.DeleteHouseRequestDTO;
 import ru.clevertec.ecl.knyazev.data.http.house.request.PostPutHouseRequestDTO;
 import ru.clevertec.ecl.knyazev.data.http.house.response.GetHouseResponseDTO;
 import ru.clevertec.ecl.knyazev.data.http.person.response.GetPersonResponseDTO;
-import ru.clevertec.ecl.knyazev.data.domain.pagination.Paging;
 
 import java.util.List;
 import java.util.UUID;
@@ -25,11 +26,13 @@ public interface HouseService {
 
     /**
      * Get all house data transfer objects, also using pagination
+     * and searching
      *
      * @param paging query object
-     * @return all house DTOs by given paging object or empty list
+     * @param searching query object
+     * @return all house DTOs by given paging, searching object or empty list
      */
-    List<GetHouseResponseDTO> getAll(Paging paging);
+    List<GetHouseResponseDTO> getAll(Paging paging, Searching searching);
 
     /**
      * Get all person DTOs that living in house, also using pagination
@@ -60,9 +63,9 @@ public interface HouseService {
     GetHouseResponseDTO update(PostPutHouseRequestDTO postPutHouseRequestDTO);
 
     /**
-     * Remove existing house using UUID in house DTO
+     * Remove existing house using house UUID in house
      *
-     * @param deleteAddressRequestDTO house dto with uuid
+     * @param houseUUID house uuid for deleting
      */
-    void remove(DeleteHouseRequestDTO deleteAddressRequestDTO);
+    void remove(UUID houseUUID);
 }

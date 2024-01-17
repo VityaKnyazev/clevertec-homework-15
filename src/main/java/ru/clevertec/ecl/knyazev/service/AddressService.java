@@ -1,5 +1,6 @@
 package ru.clevertec.ecl.knyazev.service;
 
+import ru.clevertec.ecl.knyazev.data.domain.searching.Searching;
 import ru.clevertec.ecl.knyazev.data.http.address.request.DeleteAddressRequestDTO;
 import ru.clevertec.ecl.knyazev.data.http.address.request.PostPutAddressRequestDTO;
 import ru.clevertec.ecl.knyazev.data.http.address.response.GetAddressResponseDTO;
@@ -24,11 +25,14 @@ public interface AddressService {
 
     /**
      * Get all address data transfer objects, also using pagination
+     * and searching
      *
      * @param paging query object
-     * @return all address DTOs by given paging object or empty list
+     * @param searching searching object
+     * @return all address DTOs by given paging and searching object
+     * or empty list
      */
-    List<GetAddressResponseDTO> getAll(Paging paging);
+    List<GetAddressResponseDTO> getAll(Paging paging, Searching searching);
 
     /**
      * Add address using address DTO and get address DTO as
