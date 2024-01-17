@@ -1,4 +1,4 @@
-package ru.clevertec.ecl.knyazev.pagination;
+package ru.clevertec.ecl.knyazev.data.domain.pagination;
 
 import java.util.Collection;
 

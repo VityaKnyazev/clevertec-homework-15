@@ -8,7 +8,7 @@ import ru.clevertec.ecl.knyazev.data.http.passport.request.DeletePassportRequest
 import ru.clevertec.ecl.knyazev.data.http.passport.request.PostPutPassportRequestDTO;
 import ru.clevertec.ecl.knyazev.data.http.passport.response.GetPassportResponseDTO;
 import ru.clevertec.ecl.knyazev.mapper.PassportMapper;
-import ru.clevertec.ecl.knyazev.pagination.Paging;
+import ru.clevertec.ecl.knyazev.data.domain.pagination.Paging;
 import ru.clevertec.ecl.knyazev.service.PassportService;
 import ru.clevertec.ecl.knyazev.service.exception.ServiceException;
 

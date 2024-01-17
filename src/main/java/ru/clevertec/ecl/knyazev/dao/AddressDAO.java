@@ -1,8 +1,9 @@
 package ru.clevertec.ecl.knyazev.dao;
 
 import ru.clevertec.ecl.knyazev.dao.exception.DAOException;
+import ru.clevertec.ecl.knyazev.data.domain.pagination.Paging;
+import ru.clevertec.ecl.knyazev.data.domain.searching.Searching;
 import ru.clevertec.ecl.knyazev.entity.Address;
-import ru.clevertec.ecl.knyazev.pagination.Paging;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,12 +34,16 @@ public interface AddressDAO {
 
     /**
      *
-     * Find all addresses on given paging data
+     * Find all addresses or find all addresses
+     * on given paging data
+     * and searching data
      *
      * @param paging paging param
-     * @return all addresses on given paging query or empty list
+     * @param searching searching param
+     * @return all addresses or all addresses on given paging data
+     * and searching data or empty list
      */
-    List<Address> findAll(Paging paging);
+    List<Address> findAll(Paging paging, Searching searching);
 
     /**
      *

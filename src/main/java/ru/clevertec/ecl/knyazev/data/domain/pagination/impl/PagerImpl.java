@@ -1,8 +1,8 @@
-package ru.clevertec.ecl.knyazev.pagination.impl;
+package ru.clevertec.ecl.knyazev.data.domain.pagination.impl;
 
 import org.springframework.stereotype.Component;
-import ru.clevertec.ecl.knyazev.pagination.Pager;
-import ru.clevertec.ecl.knyazev.pagination.Paging;
+import ru.clevertec.ecl.knyazev.data.domain.pagination.Paging;
+import ru.clevertec.ecl.knyazev.data.domain.pagination.Pager;
 
 import java.util.Collection;
 

@@ -4,11 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.clevertec.ecl.knyazev.dao.AddressDAO;
+import ru.clevertec.ecl.knyazev.data.domain.searching.Searching;
 import ru.clevertec.ecl.knyazev.data.http.address.request.DeleteAddressRequestDTO;
 import ru.clevertec.ecl.knyazev.data.http.address.request.PostPutAddressRequestDTO;
 import ru.clevertec.ecl.knyazev.data.http.address.response.GetAddressResponseDTO;
+import ru.clevertec.ecl.knyazev.entity.Address;
 import ru.clevertec.ecl.knyazev.mapper.AddressMapper;
-import ru.clevertec.ecl.knyazev.pagination.Paging;
+import ru.clevertec.ecl.knyazev.data.domain.pagination.Paging;
 import ru.clevertec.ecl.knyazev.service.AddressService;
 import ru.clevertec.ecl.knyazev.service.exception.ServiceException;
 
@@ -36,11 +38,9 @@ public class AddressServiceImpl implements AddressService {
      * {@inheritDoc}
      */
     @Override
-    public List<GetAddressResponseDTO> getAll(Paging paging) {
+    public List<GetAddressResponseDTO> getAll(Paging paging, Searching searching) {
         return addressMapperImpl.toGetAddressResponseDTOs(
-                paging.usePaging()
-                        ? addressDAOJPAImpl.findAll(paging)
-                        : addressDAOJPAImpl.findAll());
+                addressDAOJPAImpl.findAll(paging, searching));
     }
 
     /**

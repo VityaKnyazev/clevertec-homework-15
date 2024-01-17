@@ -5,15 +5,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.clevertec.ecl.knyazev.dao.HouseDAO;
-import ru.clevertec.ecl.knyazev.data.http.house.request.DeleteHouseRequestDTO;
+import ru.clevertec.ecl.knyazev.data.domain.pagination.Pager;
+import ru.clevertec.ecl.knyazev.data.domain.pagination.Paging;
+import ru.clevertec.ecl.knyazev.data.domain.searching.Searching;
 import ru.clevertec.ecl.knyazev.data.http.house.request.PostPutHouseRequestDTO;
 import ru.clevertec.ecl.knyazev.data.http.house.response.GetHouseResponseDTO;
 import ru.clevertec.ecl.knyazev.data.http.person.response.GetPersonResponseDTO;
 import ru.clevertec.ecl.knyazev.entity.Person;
 import ru.clevertec.ecl.knyazev.mapper.HouseMapper;
 import ru.clevertec.ecl.knyazev.mapper.PersonMapper;
-import ru.clevertec.ecl.knyazev.pagination.Pager;
-import ru.clevertec.ecl.knyazev.pagination.Paging;
 import ru.clevertec.ecl.knyazev.service.HouseService;
 import ru.clevertec.ecl.knyazev.service.exception.ServiceException;
 
@@ -46,11 +46,9 @@ public class HouseServiceImpl implements HouseService {
      */
     @Transactional(readOnly = true)
     @Override
-    public List<GetHouseResponseDTO> getAll(Paging paging) {
+    public List<GetHouseResponseDTO> getAll(Paging paging, Searching searching) {
         return houseMapperImpl.toGetHouseResponseDTOs(
-                paging.usePaging()
-                        ? houseDAOJPAImpl.findAll(paging)
-                        : houseDAOJPAImpl.findAll());
+                houseDAOJPAImpl.findAll(paging, searching));
     }
 
     /**
@@ -95,8 +93,7 @@ public class HouseServiceImpl implements HouseService {
      */
     @Transactional
     @Override
-    public void remove(DeleteHouseRequestDTO deleteAddressRequestDTO) {
-        houseDAOJPAImpl.delete(
-                houseMapperImpl.toHouseUUID(deleteAddressRequestDTO));
+    public void remove(UUID houseUUID) {
+        houseDAOJPAImpl.delete(houseUUID);
     }
 }
