@@ -25,20 +25,13 @@ public interface PassportDAO {
 
     /**
      *
-     * Find all passports
-     *
-     * @return all passports or empty list
-     */
-    List<Passport> findAll();
-
-    /**
-     *
      * Find all passports on given paging data
      *
      * @param paging paging param for pagination
      * @return all passports on given paging query or empty list
+     * @throws DAOException when finding error
      */
-    List<Passport> findAll(Paging paging);
+    List<Passport> findAll(Paging paging) throws DAOException;
 
     /**
      *

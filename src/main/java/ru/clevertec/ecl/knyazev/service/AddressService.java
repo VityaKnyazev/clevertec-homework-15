@@ -1,10 +1,9 @@
 package ru.clevertec.ecl.knyazev.service;
 
+import ru.clevertec.ecl.knyazev.data.domain.pagination.Paging;
 import ru.clevertec.ecl.knyazev.data.domain.searching.Searching;
-import ru.clevertec.ecl.knyazev.data.http.address.request.DeleteAddressRequestDTO;
 import ru.clevertec.ecl.knyazev.data.http.address.request.PostPutAddressRequestDTO;
 import ru.clevertec.ecl.knyazev.data.http.address.response.GetAddressResponseDTO;
-import ru.clevertec.ecl.knyazev.data.domain.pagination.Paging;
 import ru.clevertec.ecl.knyazev.service.exception.ServiceException;
 
 import java.util.List;
@@ -53,9 +52,9 @@ public interface AddressService {
     GetAddressResponseDTO update(PostPutAddressRequestDTO postPutAddressRequestDTO);
 
     /**
-     * Remove existing address using UUID in address DTO
+     * Remove existing address using its UUID
      *
-     * @param deleteAddressRequestDTO address dto with uuid
+     * @param addressUUID address uuid
      */
-    void remove(DeleteAddressRequestDTO deleteAddressRequestDTO);
+    void remove(UUID addressUUID);
 }

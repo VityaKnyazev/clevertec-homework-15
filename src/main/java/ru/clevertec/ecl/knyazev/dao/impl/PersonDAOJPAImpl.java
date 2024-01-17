@@ -30,6 +30,7 @@ public class PersonDAOJPAImpl implements PersonDAO {
 
     private static final String FIND_BY_UUID_QUERY = "SELECT p FROM Person p WHERE p.uuid = :uuid";
     private static final String FIND_ALL_QUERY = "SELECT p FROM Person p";
+    private static final String REMOVE_QUERY = "DELETE FROM Person p WHERE p.uuid = :personUUID";
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -70,25 +71,7 @@ public class PersonDAOJPAImpl implements PersonDAO {
      * {@inheritDoc}
      */
     @Override
-    public List<Person> findAll() {
-        List<Person> persons = new ArrayList<>();
-
-        try {
-            persons = entityManager.createQuery(FIND_ALL_QUERY, Person.class)
-                    .getResultList();
-        } catch (IllegalArgumentException | PersistenceException e) {
-            log.error(String.format("%s: %s",
-                    DAOException.FIND_ALL_ERROR,
-                    e.getMessage()), e);
-        }
-        return persons;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<Person> findAll(Paging paging) {
+    public List<Person> findAll(Paging paging) throws DAOException {
 
         List<Person> persons = new ArrayList<>();
 
@@ -98,7 +81,7 @@ public class PersonDAOJPAImpl implements PersonDAO {
                     .setMaxResults(paging.getLimit())
                     .getResultList();
         } catch (IllegalArgumentException | PersistenceException e) {
-            log.error(String.format("%s: %s",
+            throw new DAOException(String.format("%s: %s",
                     DAOException.FIND_ALL_ERROR,
                     e.getMessage()), e);
         }
@@ -115,7 +98,6 @@ public class PersonDAOJPAImpl implements PersonDAO {
         House livingHouseDB = getPersonLivingHouse(person);
         List<House> possessingHousesDB = getPersonPossessingHouses(person);
 
-        person.setUuid(UUID.randomUUID());
         person.setPassport(passportDB);
         person.setLivingHouse(livingHouseDB);
         person.setPossessedHouses(possessingHousesDB);
@@ -170,20 +152,18 @@ public class PersonDAOJPAImpl implements PersonDAO {
     @Override
     public void delete(UUID personUUID) throws DAOException {
 
-        findByUUID(personUUID).ifPresent(personDB -> {
-            try {
-                entityManager.remove(personDB);
-            } catch (IllegalArgumentException | PersistenceException e) {
-                throw new DAOException(String.format("%s: %s",
-                        DAOException.DELETING_ERROR,
-                        e.getMessage()), e);
-            }
-        });
-
+        try {
+            entityManager.createQuery(REMOVE_QUERY)
+                    .setParameter("personUUID", personUUID)
+                    .executeUpdate();
+        } catch (IllegalArgumentException | PersistenceException e) {
+            throw new DAOException(String.format("%s: %s",
+                    DAOException.DELETING_ERROR,
+                    e.getMessage()), e);
+        }
     }
 
     /**
-     *
      * Get person passport from db
      *
      * @param person person that contains passport uuid
@@ -201,7 +181,6 @@ public class PersonDAOJPAImpl implements PersonDAO {
     }
 
     /**
-     *
      * Get person living house from db
      *
      * @param person person that contains living house uuid
@@ -219,7 +198,6 @@ public class PersonDAOJPAImpl implements PersonDAO {
     }
 
     /**
-     *
      * Get person possessing houses from db
      *
      * @param person person that contains possessing houses UUIDs

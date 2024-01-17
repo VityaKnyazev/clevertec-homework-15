@@ -25,20 +25,13 @@ public interface PersonDAO {
 
     /**
      *
-     * Find all persons
-     *
-     * @return all persons or empty list
-     */
-    List<Person> findAll();
-
-    /**
-     *
      * Find all persons on given paging data
      *
      * @param paging paging param
      * @return all persons on given paging query or empty list
+     * @throws DAOException when finding error
      */
-    List<Person> findAll(Paging paging);
+    List<Person> findAll(Paging paging) throws DAOException;
 
     /**
      *

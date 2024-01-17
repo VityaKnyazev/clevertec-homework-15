@@ -17,7 +17,6 @@ import ru.clevertec.ecl.knyazev.data.domain.searching.Searching;
 import ru.clevertec.ecl.knyazev.entity.Address;
 import ru.clevertec.ecl.knyazev.entity.House;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +33,7 @@ public class HouseDAOJPAImpl implements HouseDAO {
 
     private static final String FIND_ALL_WHERE_ADDRESS_SEARCHING_PART_QUERY =
             " WHERE h.address.uuid IN (:searchingAddressUUIDs)";
+    private static final String REMOVE_QUERY = "DELETE FROM House h WHERE h.uuid = :houseUUID";
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -69,35 +69,16 @@ public class HouseDAOJPAImpl implements HouseDAO {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<House> findAll() {
-        List<House> houses = new ArrayList<>();
-
-        try {
-            houses = entityManager.createQuery(FIND_ALL_QUERY, House.class)
-                    .getResultList();
-        } catch (IllegalArgumentException | PersistenceException e) {
-            log.error(String.format("%s: %s",
-                    DAOException.FIND_ALL_ERROR,
-                    e.getMessage()), e);
-        }
-        return houses;
-    }
-
-
-    /**
      * Find all houses, also using paging and searching.
      * <p>
      * When using searching also searching address text fields
      *
      * @param paging    paging param
      * @param searching searching param
-     * @return
+     * @return all houses also using paging and searching or empty list
      */
     @Override
-    public List<House> findAll(Paging paging, Searching searching) {
+    public List<House> findAll(Paging paging, Searching searching) throws DAOException {
 
         List<House> houses = new ArrayList<>();
 
@@ -109,10 +90,10 @@ public class HouseDAOJPAImpl implements HouseDAO {
             TypedQuery<House> houseTypedQuery = entityManager.createQuery(query, House.class);
 
             if (searching.useSearching()) {
-                //Use full text searching on Address fields and get its UUIDs
+
                 List<UUID> searchingAddressUUIDs = addressDAOJPAImpl.findAll(
                                 Paging.noPaging(), searching).stream()
-                        .map(address -> address.getUuid())
+                        .map(Address::getUuid)
                         .toList();
 
                 houseTypedQuery = houseTypedQuery.setParameter("searchingAddressUUIDs",
@@ -127,7 +108,7 @@ public class HouseDAOJPAImpl implements HouseDAO {
             houses = houseTypedQuery.getResultList();
 
         } catch (IllegalArgumentException | PersistenceException e) {
-            log.error(String.format("%s: %s",
+            throw new DAOException(String.format("%s: %s",
                     DAOException.FIND_ALL_ERROR,
                     e.getMessage()), e);
         }
@@ -148,9 +129,7 @@ public class HouseDAOJPAImpl implements HouseDAO {
                         DAOException.ENTITY_NOT_FOUND,
                         addressUUID)));
 
-        house.setUuid(UUID.randomUUID());
         house.setAddress(houseAddress);
-        house.setCreateDate(LocalDateTime.now());
 
         try {
             entityManager.persist(house);
@@ -200,15 +179,15 @@ public class HouseDAOJPAImpl implements HouseDAO {
     @Override
     public void delete(UUID houseUUID) throws DAOException {
 
-        findByUUID(houseUUID).ifPresent(houseDB -> {
-            try {
-                entityManager.remove(houseDB);
-            } catch (IllegalArgumentException | PersistenceException e) {
-                throw new DAOException(String.format("%s: %s",
-                        DAOException.DELETING_ERROR,
-                        e.getMessage()), e);
-            }
-        });
+        try {
+            entityManager.createQuery(REMOVE_QUERY)
+                    .setParameter("houseUUID", houseUUID)
+                    .executeUpdate();
+        } catch (IllegalArgumentException | PersistenceException e) {
+            throw new DAOException(String.format("%s: %s",
+                    DAOException.DELETING_ERROR,
+                    e.getMessage()), e);
+        }
 
     }
 }

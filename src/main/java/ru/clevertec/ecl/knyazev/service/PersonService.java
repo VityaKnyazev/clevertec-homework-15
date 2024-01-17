@@ -1,10 +1,9 @@
 package ru.clevertec.ecl.knyazev.service;
 
+import ru.clevertec.ecl.knyazev.data.domain.pagination.Paging;
 import ru.clevertec.ecl.knyazev.data.http.house.response.GetHouseResponseDTO;
-import ru.clevertec.ecl.knyazev.data.http.person.request.DeletePersonRequestDTO;
 import ru.clevertec.ecl.knyazev.data.http.person.request.PostPutPersonRequestDTO;
 import ru.clevertec.ecl.knyazev.data.http.person.response.GetPersonResponseDTO;
-import ru.clevertec.ecl.knyazev.data.domain.pagination.Paging;
 import ru.clevertec.ecl.knyazev.service.exception.ServiceException;
 
 import java.util.List;
@@ -60,9 +59,9 @@ public interface PersonService {
     GetPersonResponseDTO update(PostPutPersonRequestDTO postPutPersonRequestDTO);
 
     /**
-     * Remove existing person using UUID in person DTO
+     * Remove existing person using its UUID
      *
-     * @param deletePersonRequestDTO person dto with uuid
+     * @param personUUID person uuid
      */
-    void remove(DeletePersonRequestDTO deletePersonRequestDTO);
+    void remove(UUID personUUID);
 }

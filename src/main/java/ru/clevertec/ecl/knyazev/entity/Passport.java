@@ -1,15 +1,22 @@
 package ru.clevertec.ecl.knyazev.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.clevertec.ecl.knyazev.entity.listener.PassportListener;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
+@EntityListeners({PassportListener.class})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

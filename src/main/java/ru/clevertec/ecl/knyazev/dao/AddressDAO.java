@@ -26,14 +26,6 @@ public interface AddressDAO {
 
     /**
      *
-     * Find all addresses
-     *
-     * @return all addresses or empty list
-     */
-    List<Address> findAll();
-
-    /**
-     *
      * Find all addresses or find all addresses
      * on given paging data
      * and searching data
@@ -42,28 +34,20 @@ public interface AddressDAO {
      * @param searching searching param
      * @return all addresses or all addresses on given paging data
      * and searching data or empty list
+     * @throws DAOException when finding error
      */
-    List<Address> findAll(Paging paging, Searching searching);
+    List<Address> findAll(Paging paging, Searching searching) throws DAOException;
 
     /**
      *
-     * save address
+     * Save or update address. if id is null using saving,
+     * otherwise - updating
      *
-     * @param address for saving
-     * @return saved address
-     * @throws DAOException when error saving
+     * @param address for saving or updating
+     * @return saved or updates address
+     * @throws DAOException when error saving or updating
      */
-    Address save(Address address) throws DAOException;
-
-    /**
-     *
-     * update address
-     *
-     * @param address for updating
-     * @return updated address
-     * @throws DAOException when error updating
-     */
-    Address update(Address address) throws DAOException;
+    Address saveOrUpdate(Address address) throws DAOException;
 
     /**
      *

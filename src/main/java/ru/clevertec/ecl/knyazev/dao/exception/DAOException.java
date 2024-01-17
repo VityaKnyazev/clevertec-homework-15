@@ -4,6 +4,7 @@ public class DAOException extends RuntimeException {
 
     public static final String UPDATING_ERROR = "Updating error";
     public static final String SAVING_ERROR = "Saving error";
+    public static final String SAVING_OR_UPDATING_ERROR = "Saving error";
     public static final String DELETING_ERROR = "Deleting error";
 
     public static final String ENTITY_NOT_FOUND = "Entity not found with uuid=";

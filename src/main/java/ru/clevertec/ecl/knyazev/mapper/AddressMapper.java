@@ -2,13 +2,12 @@ package ru.clevertec.ecl.knyazev.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import ru.clevertec.ecl.knyazev.data.http.address.request.DeleteAddressRequestDTO;
+import org.mapstruct.MappingTarget;
 import ru.clevertec.ecl.knyazev.data.http.address.request.PostPutAddressRequestDTO;
 import ru.clevertec.ecl.knyazev.data.http.address.response.GetAddressResponseDTO;
 import ru.clevertec.ecl.knyazev.entity.Address;
 
 import java.util.List;
-import java.util.UUID;
 
 @Mapper(componentModel = "spring")
 public interface AddressMapper {
@@ -18,9 +17,9 @@ public interface AddressMapper {
     List<GetAddressResponseDTO> toGetAddressResponseDTOs(List<Address> addresses);
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "uuid", expression = "java(java.util.UUID.randomUUID())")
     Address toAddress(PostPutAddressRequestDTO postPutAddressRequestDTO);
 
-    default UUID toAddressUUID(DeleteAddressRequestDTO deleteAddressRequestDTO) {
-        return UUID.fromString(deleteAddressRequestDTO.uuid());
-    }
+    @Mapping(target = "id", ignore = true)
+    Address toAddress(@MappingTarget Address dbAddress, PostPutAddressRequestDTO postPutAddressRequestDTO);
 }

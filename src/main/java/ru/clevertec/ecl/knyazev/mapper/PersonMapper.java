@@ -1,7 +1,8 @@
 package ru.clevertec.ecl.knyazev.mapper;
 
-import org.mapstruct.*;
-import ru.clevertec.ecl.knyazev.data.http.person.request.DeletePersonRequestDTO;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import ru.clevertec.ecl.knyazev.data.http.person.request.PostPutPersonRequestDTO;
 import ru.clevertec.ecl.knyazev.data.http.person.response.GetPersonResponseDTO;
 import ru.clevertec.ecl.knyazev.entity.House;
@@ -42,8 +43,4 @@ public interface PersonMapper {
             source = "possessingHouseUUIDs",
             qualifiedByName = "possessingHouseUUIDsInPerson")
     Person toPerson(PostPutPersonRequestDTO postPutPersonRequestDTO);
-
-    default UUID toPersonUUID(DeletePersonRequestDTO deletePersonRequestDTO) {
-        return UUID.fromString(deletePersonRequestDTO.uuid());
-    }
 }

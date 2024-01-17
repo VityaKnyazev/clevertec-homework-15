@@ -31,6 +31,7 @@ public class AddressDAOJPAImpl implements AddressDAO {
     private static final String FIND_BY_UUID_QUERY = "SELECT a FROM Address a WHERE a.uuid = :uuid";
     private static final String FIND_ALL_QUERY = """
             SELECT DISTINCT id, uuid, area, country, city, street, number FROM address""";
+    private static final String REMOVE_QUERY = "DELETE FROM Address a WHERE a.uuid = :addressUUID";
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -63,26 +64,7 @@ public class AddressDAOJPAImpl implements AddressDAO {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public List<Address> findAll() {
-        List<Address> addresses = new ArrayList<>();
-
-        try {
-            addresses = (List<Address>) entityManager.createNativeQuery(FIND_ALL_QUERY, Address.class)
-                    .getResultList();
-        } catch (IllegalArgumentException | PersistenceException e) {
-            log.error(String.format("%s: %s",
-                    DAOException.FIND_ALL_ERROR,
-                    e.getMessage()), e);
-        }
-        return addresses;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @SuppressWarnings("unchecked")
-    @Override
-    public List<Address> findAll(Paging paging, Searching searching) {
+    public List<Address> findAll(Paging paging, Searching searching) throws DAOException {
         List<Address> addresses = new ArrayList<>();
 
         String queryRes = searching.useSearching()
@@ -117,7 +99,7 @@ public class AddressDAOJPAImpl implements AddressDAO {
             addresses = (List<Address>) query.getResultList();
 
         } catch (IllegalArgumentException | PersistenceException e) {
-            log.error(String.format("%s: %s",
+            throw new DAOException(String.format("%s: %s",
                     DAOException.FIND_ALL_ERROR,
                     e.getMessage()), e);
         }
@@ -128,15 +110,17 @@ public class AddressDAOJPAImpl implements AddressDAO {
      * {@inheritDoc}
      */
     @Override
-    public Address save(Address address) throws DAOException {
-
-        address.setUuid(UUID.randomUUID());
+    public Address saveOrUpdate(Address address) throws DAOException {
 
         try {
-            entityManager.persist(address);
+            if (address.getId() == null) {
+                entityManager.persist(address);
+            } else {
+                entityManager.merge(address);
+            }
         } catch (IllegalArgumentException | PersistenceException e) {
             throw new DAOException(String.format("%s: %s",
-                    DAOException.SAVING_ERROR,
+                    DAOException.SAVING_OR_UPDATING_ERROR,
                     e.getMessage()), e);
         }
         return address;
@@ -146,45 +130,16 @@ public class AddressDAOJPAImpl implements AddressDAO {
      * {@inheritDoc}
      */
     @Override
-    public Address update(Address address) throws DAOException {
-
-        Address addressDB = findByUUID(address.getUuid())
-                .orElseThrow(() -> new DAOException(String.format("%s: %s%s",
-                        DAOException.UPDATING_ERROR,
-                        DAOException.ENTITY_NOT_FOUND,
-                        address.getUuid())));
-
-        addressDB.setArea(address.getArea());
-        addressDB.setCountry(address.getCountry());
-        addressDB.setCity(address.getCity());
-        addressDB.setStreet(address.getStreet());
-        addressDB.setNumber(address.getNumber());
-
-        try {
-            entityManager.merge(addressDB);
-        } catch (IllegalArgumentException | PersistenceException e) {
-            throw new DAOException(String.format("%s: %s",
-                    DAOException.UPDATING_ERROR,
-                    e.getMessage()), e);
-        }
-        return addressDB;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public void delete(UUID addressUUID) throws DAOException {
 
-        findByUUID(addressUUID).ifPresent(addressDB -> {
             try {
-                entityManager.remove(addressDB);
+                entityManager.createQuery(REMOVE_QUERY)
+                        .setParameter("addressUUID", addressUUID)
+                        .executeUpdate();
             } catch (IllegalArgumentException | PersistenceException e) {
                 throw new DAOException(String.format("%s: %s",
                         DAOException.DELETING_ERROR,
                         e.getMessage()), e);
             }
-        });
-
     }
 }

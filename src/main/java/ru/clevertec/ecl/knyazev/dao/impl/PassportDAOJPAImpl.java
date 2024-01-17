@@ -12,7 +12,6 @@ import ru.clevertec.ecl.knyazev.dao.exception.DAOException;
 import ru.clevertec.ecl.knyazev.data.domain.pagination.Paging;
 import ru.clevertec.ecl.knyazev.entity.Passport;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +25,7 @@ public class PassportDAOJPAImpl implements PassportDAO {
 
     private static final String FIND_BY_UUID_QUERY = "SELECT p FROM Passport p WHERE p.uuid = :uuid";
     private static final String FIND_ALL_QUERY = "SELECT p FROM Passport p";
+    private static final String REMOVE_QUERY = "DELETE FROM Passport p WHERE p.uuid = :passportUUID";
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -57,25 +57,7 @@ public class PassportDAOJPAImpl implements PassportDAO {
      * {@inheritDoc}
      */
     @Override
-    public List<Passport> findAll() {
-        List<Passport> passports = new ArrayList<>();
-
-        try {
-            passports = entityManager.createQuery(FIND_ALL_QUERY, Passport.class)
-                    .getResultList();
-        } catch (IllegalArgumentException | PersistenceException e) {
-            log.error(String.format("%s: %s",
-                    DAOException.FIND_ALL_ERROR,
-                    e.getMessage()), e);
-        }
-        return passports;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<Passport> findAll(Paging paging) {
+    public List<Passport> findAll(Paging paging) throws DAOException {
 
         List<Passport> passports = new ArrayList<>();
 
@@ -85,7 +67,7 @@ public class PassportDAOJPAImpl implements PassportDAO {
                     .setMaxResults(paging.getLimit())
                     .getResultList();
         } catch (IllegalArgumentException | PersistenceException e) {
-            log.error(String.format("%s: %s",
+            throw new DAOException(String.format("%s: %s",
                     DAOException.FIND_ALL_ERROR,
                     e.getMessage()), e);
         }
@@ -97,9 +79,6 @@ public class PassportDAOJPAImpl implements PassportDAO {
      */
     @Override
     public Passport save(Passport passport) throws DAOException {
-
-        passport.setUuid(UUID.randomUUID());
-        passport.setCreateDate(LocalDateTime.now());
 
         try {
             entityManager.persist(passport);
@@ -125,7 +104,6 @@ public class PassportDAOJPAImpl implements PassportDAO {
 
         passportDB.setPassportSeries(passport.getPassportSeries());
         passportDB.setPassportNumber(passport.getPassportNumber());
-        passportDB.setUpdateDate(LocalDateTime.now());
 
         try {
             entityManager.merge(passportDB);
@@ -143,15 +121,14 @@ public class PassportDAOJPAImpl implements PassportDAO {
     @Override
     public void delete(UUID passportUUID) throws DAOException {
 
-        findByUUID(passportUUID).ifPresent(passportDB -> {
             try {
-                entityManager.remove(passportDB);
+                entityManager.createQuery(REMOVE_QUERY)
+                        .setParameter("passportUUID", passportUUID)
+                        .executeUpdate();
             } catch (IllegalArgumentException | PersistenceException e) {
                 throw new DAOException(String.format("%s: %s",
                         DAOException.DELETING_ERROR,
                         e.getMessage()), e);
             }
-        });
-
     }
 }

@@ -3,7 +3,6 @@ package ru.clevertec.ecl.knyazev.service;
 import org.hibernate.service.spi.ServiceException;
 import ru.clevertec.ecl.knyazev.data.domain.pagination.Paging;
 import ru.clevertec.ecl.knyazev.data.domain.searching.Searching;
-import ru.clevertec.ecl.knyazev.data.http.house.request.DeleteHouseRequestDTO;
 import ru.clevertec.ecl.knyazev.data.http.house.request.PostPutHouseRequestDTO;
 import ru.clevertec.ecl.knyazev.data.http.house.response.GetHouseResponseDTO;
 import ru.clevertec.ecl.knyazev.data.http.person.response.GetPersonResponseDTO;
@@ -63,9 +62,9 @@ public interface HouseService {
     GetHouseResponseDTO update(PostPutHouseRequestDTO postPutHouseRequestDTO);
 
     /**
-     * Remove existing house using house UUID in house
+     * Remove existing house using its UUID
      *
-     * @param houseUUID house uuid for deleting
+     * @param houseUUID house uuid
      */
     void remove(UUID houseUUID);
 }

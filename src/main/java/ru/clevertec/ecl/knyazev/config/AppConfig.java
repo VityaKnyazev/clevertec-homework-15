@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @ComponentScan(basePackages = {"ru.clevertec.ecl.knyazev.dao.impl",
         "ru.clevertec.ecl.knyazev.mapper",
         "ru.clevertec.ecl.knyazev.service.impl",
-        "ru.clevertec.ecl.knyazev.pagination.impl",
+        "ru.clevertec.ecl.knyazev.data.domain.pagination.impl",
         "ru.clevertec.ecl.knyazev.controller"})
 @EnableTransactionManagement
 @EnableWebMvc

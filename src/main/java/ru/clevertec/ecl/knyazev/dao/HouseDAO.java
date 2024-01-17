@@ -26,14 +26,6 @@ public interface HouseDAO {
 
     /**
      *
-     * Find all houses
-     *
-     * @return all houses or empty list
-     */
-    List<House> findAll();
-
-    /**
-     *
      * Find all houses or find all houses
      * on given paging data
      * and searching data
@@ -42,8 +34,9 @@ public interface HouseDAO {
      * @param searching searching param
      * @return all houses or all houses on given paging data
      * and searching data or empty list
+     * @throws DAOException when finding error
      */
-    List<House> findAll(Paging paging, Searching searching);
+    List<House> findAll(Paging paging, Searching searching) throws DAOException;
 
     /**
      *

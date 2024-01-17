@@ -13,10 +13,11 @@ import java.util.stream.Collectors;
 public class SearchingImpl implements Searching {
 
     private static final String SQL_SEARCH_QUERY = "%s LIKE ?";
+    private static final int SQL_RESULT_REPEATING_COUNT = 3;
 
-    private static final String BEGIN_DATA_QUERY = "%s%";
-    private static final String MIDDLE_DATA_QUERY = "%%s%";
-    private static final String END_DATA_QUERY = "%%s";
+    private static final String BEGIN_DATA_QUERY = "%s%%";
+    private static final String MIDDLE_DATA_QUERY = "%%%s%%";
+    private static final String END_DATA_QUERY = "%%%s";
 
     private static final String WHERE = " WHERE ";
     private static final String OR = " OR ";
@@ -57,8 +58,8 @@ public class SearchingImpl implements Searching {
 
         return (fields != null && !fields.isEmpty())
                 ? WHERE + fields.stream()
-                .map(field -> String.format(SQL_SEARCH_QUERY, field))
-                .map(query -> query + OR)
+                .map(field -> (String.format(SQL_SEARCH_QUERY, field)
+                        + OR).repeat(SQL_RESULT_REPEATING_COUNT))
                 .collect(Collectors.joining())
                 .replaceFirst(OR + "$", "")
                 : "";

@@ -1,14 +1,12 @@
 package ru.clevertec.ecl.knyazev.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.clevertec.ecl.knyazev.dao.PassportDAO;
-import ru.clevertec.ecl.knyazev.data.http.passport.request.DeletePassportRequestDTO;
+import ru.clevertec.ecl.knyazev.data.domain.pagination.Paging;
 import ru.clevertec.ecl.knyazev.data.http.passport.request.PostPutPassportRequestDTO;
 import ru.clevertec.ecl.knyazev.data.http.passport.response.GetPassportResponseDTO;
 import ru.clevertec.ecl.knyazev.mapper.PassportMapper;
-import ru.clevertec.ecl.knyazev.data.domain.pagination.Paging;
 import ru.clevertec.ecl.knyazev.service.PassportService;
 import ru.clevertec.ecl.knyazev.service.exception.ServiceException;
 
@@ -16,7 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@RequiredArgsConstructor
 public class PassportServiceImpl implements PassportService {
 
     private final PassportDAO passportDAOImpl;
@@ -38,9 +36,7 @@ public class PassportServiceImpl implements PassportService {
     @Override
     public List<GetPassportResponseDTO> getAll(Paging paging) {
         return passportMapperImpl.toGetPassportResponseDTOs(
-                paging.usePaging()
-                        ? passportDAOImpl.findAll(paging)
-                        : passportDAOImpl.findAll());
+                passportDAOImpl.findAll(paging));
     }
 
     /**
@@ -67,8 +63,7 @@ public class PassportServiceImpl implements PassportService {
      * {@inheritDoc}
      */
     @Override
-    public void remove(DeletePassportRequestDTO deletePassportRequestDTO) {
-        passportDAOImpl.delete(
-                passportMapperImpl.toPassportUUID(deletePassportRequestDTO));
+    public void remove(UUID passportUUID) {
+        passportDAOImpl.delete(passportUUID);
     }
 }

@@ -65,7 +65,7 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
                 ex.getAllValidationResults().stream()
                         .flatMap(pvr -> pvr.getResolvableErrors().stream())
                         .map(MessageSourceResolvable::getDefaultMessage)
-                        .collect(Collectors.joining("", "", "")));
+                        .collect(Collectors.joining()));
         return handleExceptionInternal(ex, message, headers, status, request);
     }
 

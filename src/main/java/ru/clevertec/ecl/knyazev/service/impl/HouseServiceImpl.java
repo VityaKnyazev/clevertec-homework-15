@@ -1,7 +1,6 @@
 package ru.clevertec.ecl.knyazev.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.clevertec.ecl.knyazev.dao.HouseDAO;
@@ -21,7 +20,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@RequiredArgsConstructor
 public class HouseServiceImpl implements HouseService {
 
     private final HouseDAO houseDAOJPAImpl;

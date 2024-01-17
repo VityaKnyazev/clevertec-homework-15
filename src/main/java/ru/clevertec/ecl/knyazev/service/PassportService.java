@@ -1,9 +1,8 @@
 package ru.clevertec.ecl.knyazev.service;
 
-import ru.clevertec.ecl.knyazev.data.http.passport.request.DeletePassportRequestDTO;
+import ru.clevertec.ecl.knyazev.data.domain.pagination.Paging;
 import ru.clevertec.ecl.knyazev.data.http.passport.request.PostPutPassportRequestDTO;
 import ru.clevertec.ecl.knyazev.data.http.passport.response.GetPassportResponseDTO;
-import ru.clevertec.ecl.knyazev.data.domain.pagination.Paging;
 import ru.clevertec.ecl.knyazev.service.exception.ServiceException;
 
 import java.util.List;
@@ -49,9 +48,9 @@ public interface PassportService {
     GetPassportResponseDTO update(PostPutPassportRequestDTO postPutPassportRequestDTO);
 
     /**
-     * Remove existing passport using UUID in passport DTO
+     * Remove existing passport using its UUID
      *
-     * @param deletePassportRequestDTO passport dto with uuid
+     * @param passportUUID passport uuid
      */
-    void remove(DeletePassportRequestDTO deletePassportRequestDTO);
+    void remove(UUID passportUUID);
 }

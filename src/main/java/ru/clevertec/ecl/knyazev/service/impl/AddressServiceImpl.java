@@ -1,16 +1,15 @@
 package ru.clevertec.ecl.knyazev.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.clevertec.ecl.knyazev.dao.AddressDAO;
+import ru.clevertec.ecl.knyazev.dao.exception.DAOException;
+import ru.clevertec.ecl.knyazev.data.domain.pagination.Paging;
 import ru.clevertec.ecl.knyazev.data.domain.searching.Searching;
-import ru.clevertec.ecl.knyazev.data.http.address.request.DeleteAddressRequestDTO;
 import ru.clevertec.ecl.knyazev.data.http.address.request.PostPutAddressRequestDTO;
 import ru.clevertec.ecl.knyazev.data.http.address.response.GetAddressResponseDTO;
 import ru.clevertec.ecl.knyazev.entity.Address;
 import ru.clevertec.ecl.knyazev.mapper.AddressMapper;
-import ru.clevertec.ecl.knyazev.data.domain.pagination.Paging;
 import ru.clevertec.ecl.knyazev.service.AddressService;
 import ru.clevertec.ecl.knyazev.service.exception.ServiceException;
 
@@ -18,7 +17,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@RequiredArgsConstructor
 public class AddressServiceImpl implements AddressService {
 
     private final AddressDAO addressDAOJPAImpl;
@@ -49,7 +48,7 @@ public class AddressServiceImpl implements AddressService {
     @Override
     public GetAddressResponseDTO add(PostPutAddressRequestDTO postPutAddressRequestDTO) {
         return addressMapperImpl.toGetAddressResponseDTO(
-                addressDAOJPAImpl.save(
+                addressDAOJPAImpl.saveOrUpdate(
                         addressMapperImpl.toAddress(postPutAddressRequestDTO)));
     }
 
@@ -58,17 +57,23 @@ public class AddressServiceImpl implements AddressService {
      */
     @Override
     public GetAddressResponseDTO update(PostPutAddressRequestDTO postPutAddressRequestDTO) {
+
+        UUID addressUUID = UUID.fromString(postPutAddressRequestDTO.uuid());
+        Address addressDB = addressDAOJPAImpl.findByUUID(addressUUID)
+                .orElseThrow(() -> new ServiceException(String.format("%s. %s",
+                        DAOException.SAVING_OR_UPDATING_ERROR,
+                        ServiceException.DEFAULT_ERROR_MESSAGE)));
+
         return addressMapperImpl.toGetAddressResponseDTO(
-                addressDAOJPAImpl.update(
-                        addressMapperImpl.toAddress(postPutAddressRequestDTO)));
+                addressDAOJPAImpl.saveOrUpdate(
+                        addressMapperImpl.toAddress(addressDB, postPutAddressRequestDTO)));
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void remove(DeleteAddressRequestDTO deleteAddressRequestDTO) {
-        addressDAOJPAImpl.delete(
-                addressMapperImpl.toAddressUUID(deleteAddressRequestDTO));
+    public void remove(UUID addressUUID) {
+        addressDAOJPAImpl.delete(addressUUID);
     }
 }

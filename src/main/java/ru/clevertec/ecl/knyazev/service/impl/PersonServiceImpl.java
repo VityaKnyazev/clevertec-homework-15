@@ -1,19 +1,17 @@
 package ru.clevertec.ecl.knyazev.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.clevertec.ecl.knyazev.dao.PersonDAO;
+import ru.clevertec.ecl.knyazev.data.domain.pagination.Pager;
+import ru.clevertec.ecl.knyazev.data.domain.pagination.Paging;
 import ru.clevertec.ecl.knyazev.data.http.house.response.GetHouseResponseDTO;
-import ru.clevertec.ecl.knyazev.data.http.person.request.DeletePersonRequestDTO;
 import ru.clevertec.ecl.knyazev.data.http.person.request.PostPutPersonRequestDTO;
 import ru.clevertec.ecl.knyazev.data.http.person.response.GetPersonResponseDTO;
 import ru.clevertec.ecl.knyazev.entity.House;
 import ru.clevertec.ecl.knyazev.mapper.HouseMapper;
 import ru.clevertec.ecl.knyazev.mapper.PersonMapper;
-import ru.clevertec.ecl.knyazev.data.domain.pagination.Pager;
-import ru.clevertec.ecl.knyazev.data.domain.pagination.Paging;
 import ru.clevertec.ecl.knyazev.service.PersonService;
 import ru.clevertec.ecl.knyazev.service.exception.ServiceException;
 
@@ -21,7 +19,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@RequiredArgsConstructor
 public class PersonServiceImpl implements PersonService {
 
     private final PersonDAO personDAOJPAImpl;
@@ -48,10 +46,7 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public List<GetPersonResponseDTO> getAll(Paging paging) {
         return personMapperImpl.toGetPersonResponseDTOs(
-                paging.usePaging()
-                        ? personDAOJPAImpl.findAll(paging)
-                        : personDAOJPAImpl.findAll()
-        );
+                personDAOJPAImpl.findAll(paging));
     }
 
     /**
@@ -95,8 +90,7 @@ public class PersonServiceImpl implements PersonService {
      */
     @Transactional
     @Override
-    public void remove(DeletePersonRequestDTO deletePersonRequestDTO) {
-        personDAOJPAImpl.delete(
-                personMapperImpl.toPersonUUID(deletePersonRequestDTO));
+    public void remove(UUID personUUID) {
+        personDAOJPAImpl.delete(personUUID);
     }
 }
