@@ -1,18 +1,30 @@
 #datasource config
-datasource:
-   driverClassName: org.postgresql.Driver
-   jdbcUrl: jdbc:postgresql://localhost:5432/real_estate?useUnicode=true&characterEncoding=UTF-8
-   username: admin
-   password: admin
-   maxPoolSize: 3
-   connectionTimeout: 3000
-#hibernate config
-hibernate:
-   dialect: org.hibernate.dialect.PostgreSQLDialect
-   showSql: true
-   formatSql: false
-   hbm2ddlAuto: none
-#paging config
+spring:
+   datasource:
+      driver-class-name: org.postgresql.Driver
+      url: jdbc:postgresql://localhost:5432/real_estate?useUnicode=true&characterEncoding=UTF-8
+      username: admin
+      password: admin
+      hikari:
+         maximum-pool-size: 3
+         connection-timeout: 3000
+         transaction-isolation: TRANSACTION_READ_COMMITTED
+#jpa config
+   jpa:
+      properties:
+         hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+         hibernate.show_sql: true
+         hibernate.format_sql: false
+         hibernate.hbm2ddl.auto: none
+#pagination and sorting config
+   data:
+      rest:
+         page-param-name: page
+         limit-param-name: size
+         sort-param-name: sort
+         default-page-size: 15
+#old paging properties
+#TODO should be removed
 paging:
    defaultPage: 1
    defaultPageSize: 15

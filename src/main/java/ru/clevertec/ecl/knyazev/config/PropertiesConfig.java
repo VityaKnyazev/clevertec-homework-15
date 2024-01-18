@@ -4,10 +4,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.clevertec.ecl.knyazev.util.YAMLParser;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-
 @Configuration
 public class PropertiesConfig {
 
@@ -16,35 +12,6 @@ public class PropertiesConfig {
     @Bean
     YAMLParser yamlParser() {
         return new YAMLParser(PROPERTY_FILE);
-    }
-
-    @Bean
-    DataSourceProperties dataSourceProperties(YAMLParser yamlParser) {
-        return DataSourceProperties.builder()
-                .driverClassName(yamlParser.getProperty("datasource", "driverClassName"))
-                .jdbcUrl(yamlParser.getProperty("datasource", "jdbcUrl"))
-                .username(yamlParser.getProperty("datasource", "username"))
-                .password(yamlParser.getProperty("datasource", "password"))
-                .maxPoolSize(Integer.parseInt(yamlParser.getProperty("datasource",
-                        "maxPoolSize")))
-                .connectionTimeout(Long.parseLong(yamlParser.getProperty("datasource",
-                        "connectionTimeout")))
-                .build();
-    }
-
-    @Bean
-    Map<String, ?> hibernateProperties(YAMLParser yamlParser) {
-        Map<String, Object> properties = new HashMap<>();
-
-        properties.put("hibernate.dialect", yamlParser.getProperty("hibernate", "dialect"));
-        properties.put("hibernate.show_sql", Boolean.parseBoolean(yamlParser.getProperty("hibernate",
-                "showSql")));
-        properties.put("hibernate.format_sql", Boolean.parseBoolean(yamlParser.getProperty("hibernate",
-                "formatSql")));
-        properties.put("hibernate.hbm2ddl.auto", yamlParser.getProperty("hibernate",
-                "hbm2ddlAuto"));
-
-        return properties;
     }
 
     @Bean
