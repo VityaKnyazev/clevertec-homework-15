@@ -23,6 +23,10 @@ spring:
          limit-param-name: size
          sort-param-name: sort
          default-page-size: 15
+#liquibase config
+   liquibase:
+      change-log: /db/liquibase/db-real-estate-changelog.xml
+      enabled: true
 #old paging properties
 #TODO should be removed
 paging:
