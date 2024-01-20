@@ -33,4 +33,14 @@
         <tagDatabase tag="v-2.0_db_withFillingTables"/>
     </changeSet>
 
+    <changeSet id="5" author="VityaKnyazev">
+        <sqlFile path="../addPersonsHousesHistoryTableWithTriggersToRealEstateDatabase.sql"
+                encoding="UTF-8" endDelimiter=";" splitStatements="true"
+                 stripComments="true" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="6" author="VityaKnyazev">
+        <tagDatabase tag="v-2.1_db_withAdditionalTableAndTriggers"/>
+    </changeSet>
+
 </databaseChangeLog>
