@@ -18,8 +18,11 @@ public interface AddressMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "uuid", expression = "java(java.util.UUID.randomUUID())")
+    @Mapping(target = "house", ignore = true)
     Address toAddress(PostPutAddressRequestDTO postPutAddressRequestDTO);
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "uuid", ignore = true)
+    @Mapping(target = "house", ignore = true)
     Address toAddress(@MappingTarget Address dbAddress, PostPutAddressRequestDTO postPutAddressRequestDTO);
 }

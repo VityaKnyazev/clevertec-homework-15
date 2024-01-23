@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 /**
  * Represents part SQL query creator for full text searching
  */
-public class SearchingImpl implements Searching {
+public class SearchingImpl extends Searching {
 
     private static final String SQL_SEARCH_QUERY = "%s LIKE ?";
     private static final int SQL_RESULT_REPEATING_COUNT = 3;
@@ -23,7 +23,7 @@ public class SearchingImpl implements Searching {
     private static final String OR = " OR ";
 
     private final String searchData;
-    private final ArrayDeque<String> searchDataValues = new ArrayDeque<>(3) {{
+    private final ArrayDeque<String> searchDataValues = new ArrayDeque<>(SQL_RESULT_REPEATING_COUNT) {{
         addFirst(BEGIN_DATA_QUERY);
         addLast(MIDDLE_DATA_QUERY);
         addLast(END_DATA_QUERY);
@@ -73,7 +73,7 @@ public class SearchingImpl implements Searching {
      * @throws SearchingException when searching not using
      */
     @Override
-    public String getSearchingValue() throws SearchingException {
+    protected String getSearchingValue() throws SearchingException {
         if (!useSearching()) {
             throw new SearchingException(SearchingException.SEARCHING_NOT_USING_ERROR);
         }
@@ -82,6 +82,21 @@ public class SearchingImpl implements Searching {
         searchDataValues.addLast(searchingValue);
 
         return String.format(searchingValue, searchData);
+    }
+
+    /**
+     * Get quantity of sql searching parameters
+     * {inheritDoc}
+     *
+     * @throws SearchingException when searching not using
+     */
+    @Override
+    protected Integer getSearchingParameters(int fieldQuantity) throws SearchingException {
+        if (!useSearching()) {
+            throw new SearchingException(SearchingException.SEARCHING_NOT_USING_ERROR);
+        }
+
+        return SQL_RESULT_REPEATING_COUNT * fieldQuantity;
     }
 
     /**

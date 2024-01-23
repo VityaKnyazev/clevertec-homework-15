@@ -1,12 +1,13 @@
 package ru.clevertec.ecl.knyazev.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ru.clevertec.ecl.knyazev.dao.PassportDAO;
-import ru.clevertec.ecl.knyazev.data.domain.pagination.Paging;
 import ru.clevertec.ecl.knyazev.data.http.passport.request.PostPutPassportRequestDTO;
 import ru.clevertec.ecl.knyazev.data.http.passport.response.GetPassportResponseDTO;
+import ru.clevertec.ecl.knyazev.entity.Passport;
 import ru.clevertec.ecl.knyazev.mapper.PassportMapper;
+import ru.clevertec.ecl.knyazev.repository.PassportRepository;
 import ru.clevertec.ecl.knyazev.service.PassportService;
 import ru.clevertec.ecl.knyazev.service.exception.ServiceException;
 
@@ -17,7 +18,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PassportServiceImpl implements PassportService {
 
-    private final PassportDAO passportDAOImpl;
+    private final PassportRepository passportRepository;
 
     private final PassportMapper passportMapperImpl;
 
@@ -25,8 +26,17 @@ public class PassportServiceImpl implements PassportService {
      * {@inheritDoc}
      */
     @Override
-    public GetPassportResponseDTO get(UUID passportUUID) throws ServiceException {
-        return passportMapperImpl.toGetPassportResponseDTO(passportDAOImpl.findByUUID(passportUUID)
+    public Passport getPassport(UUID passportUUID) throws ServiceException {
+        return passportRepository.findByUuid(passportUUID)
+                .orElseThrow(ServiceException::new);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public GetPassportResponseDTO getPassportResponseDTO(UUID passportUUID) throws ServiceException {
+        return passportMapperImpl.toGetPassportResponseDTO(passportRepository.findByUuid(passportUUID)
                 .orElseThrow(ServiceException::new));
     }
 
@@ -34,9 +44,9 @@ public class PassportServiceImpl implements PassportService {
      * {@inheritDoc}
      */
     @Override
-    public List<GetPassportResponseDTO> getAll(Paging paging) {
+    public List<GetPassportResponseDTO> getAll(Pageable pageable) {
         return passportMapperImpl.toGetPassportResponseDTOs(
-                passportDAOImpl.findAll(paging));
+                passportRepository.findAll(pageable).getContent());
     }
 
     /**
@@ -45,18 +55,23 @@ public class PassportServiceImpl implements PassportService {
     @Override
     public GetPassportResponseDTO add(PostPutPassportRequestDTO postPutPassportRequestDTO) {
         return passportMapperImpl.toGetPassportResponseDTO(
-                passportDAOImpl.save(
+                passportRepository.save(
                         passportMapperImpl.toPassport(postPutPassportRequestDTO)));
     }
 
     /**
      * {@inheritDoc}
+     * @throws ServiceException when passport not found
      */
     @Override
-    public GetPassportResponseDTO update(PostPutPassportRequestDTO postPutPassportRequestDTO) {
+    public GetPassportResponseDTO update(PostPutPassportRequestDTO postPutPassportRequestDTO) throws ServiceException {
+        Passport dbPassport = passportRepository.findByUuid(
+                UUID.fromString(postPutPassportRequestDTO.uuid()))
+                .orElseThrow(ServiceException::new);
+
         return passportMapperImpl.toGetPassportResponseDTO(
-                passportDAOImpl.update(
-                        passportMapperImpl.toPassport(postPutPassportRequestDTO)));
+                passportRepository.save(
+                        passportMapperImpl.toPassport(dbPassport, postPutPassportRequestDTO)));
     }
 
     /**
@@ -64,6 +79,6 @@ public class PassportServiceImpl implements PassportService {
      */
     @Override
     public void remove(UUID passportUUID) {
-        passportDAOImpl.delete(passportUUID);
+        passportRepository.deleteByUuid(passportUUID);
     }
 }

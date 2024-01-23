@@ -1,8 +1,8 @@
 package ru.clevertec.ecl.knyazev.controller;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,11 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.clevertec.ecl.knyazev.config.PagingProperties;
-import ru.clevertec.ecl.knyazev.data.domain.pagination.Paging;
-import ru.clevertec.ecl.knyazev.data.domain.pagination.impl.PagingImpl;
 import ru.clevertec.ecl.knyazev.data.http.house.response.GetHouseResponseDTO;
 import ru.clevertec.ecl.knyazev.data.http.person.request.PostPutPersonRequestDTO;
 import ru.clevertec.ecl.knyazev.data.http.person.response.GetPersonResponseDTO;
@@ -30,8 +26,6 @@ import java.util.UUID;
 public class PersonController {
 
     private final PersonService personServiceImpl;
-
-    private final PagingProperties pagingPropertiesImpl;
 
     @GetMapping("/{uuid}")
     public ResponseEntity<GetPersonResponseDTO> getPerson(@PathVariable(name = "uuid")
@@ -48,32 +42,16 @@ public class PersonController {
                                                                                @org.hibernate.validator.constraints.UUID(message =
                                                                                        "person id must be uuid string in lower case")
                                                                                String uuid,
-                                                                               @RequestParam(required = false, name = "page")
-                                                                               @Valid
-                                                                               @Positive(message = "page number must be from 1")
-                                                                               Integer page,
-                                                                               @RequestParam(required = false, name = "page_size")
-                                                                               @Valid
-                                                                               @Positive(message = "page size must be from 1")
-                                                                               Integer pageSize) {
+                                                                               Pageable pageable) {
         UUID personUUID = UUID.fromString(uuid);
-        Paging paging = new PagingImpl(page, pageSize, pagingPropertiesImpl);
 
-        return ResponseEntity.ok(personServiceImpl.getPossessingHouses(personUUID, paging));
+        return ResponseEntity.ok(personServiceImpl.getPossessingHouses(personUUID, pageable));
     }
 
     @GetMapping
-    public ResponseEntity<List<GetPersonResponseDTO>> getAllPersons(@RequestParam(required = false, name = "page")
-                                                                    @Valid
-                                                                    @Positive(message = "page number must be from 1")
-                                                                    Integer page,
-                                                                    @RequestParam(required = false, name = "page_size")
-                                                                    @Valid
-                                                                    @Positive(message = "page size must be from 1")
-                                                                    Integer pageSize) {
-        Paging paging = new PagingImpl(page, pageSize, pagingPropertiesImpl);
+    public ResponseEntity<List<GetPersonResponseDTO>> getAllPersons(Pageable pageable) {
 
-        return ResponseEntity.ok(personServiceImpl.getAll(paging));
+        return ResponseEntity.ok(personServiceImpl.getAll(pageable));
     }
 
     @PostMapping

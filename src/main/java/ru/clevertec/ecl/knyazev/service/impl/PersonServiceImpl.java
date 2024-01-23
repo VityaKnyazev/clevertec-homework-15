@@ -1,20 +1,25 @@
 package ru.clevertec.ecl.knyazev.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.clevertec.ecl.knyazev.dao.PersonDAO;
-import ru.clevertec.ecl.knyazev.data.domain.pagination.Pager;
-import ru.clevertec.ecl.knyazev.data.domain.pagination.Paging;
 import ru.clevertec.ecl.knyazev.data.http.house.response.GetHouseResponseDTO;
 import ru.clevertec.ecl.knyazev.data.http.person.request.PostPutPersonRequestDTO;
 import ru.clevertec.ecl.knyazev.data.http.person.response.GetPersonResponseDTO;
 import ru.clevertec.ecl.knyazev.entity.House;
+import ru.clevertec.ecl.knyazev.entity.Passport;
+import ru.clevertec.ecl.knyazev.entity.Person;
 import ru.clevertec.ecl.knyazev.mapper.HouseMapper;
 import ru.clevertec.ecl.knyazev.mapper.PersonMapper;
+import ru.clevertec.ecl.knyazev.repository.PersonRepository;
+import ru.clevertec.ecl.knyazev.service.HouseService;
+import ru.clevertec.ecl.knyazev.service.PassportService;
 import ru.clevertec.ecl.knyazev.service.PersonService;
 import ru.clevertec.ecl.knyazev.service.exception.ServiceException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,12 +27,13 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PersonServiceImpl implements PersonService {
 
-    private final PersonDAO personDAOJPAImpl;
+    private final PersonRepository personRepository;
+
+    private final PassportService passportServiceImpl;
+    private final HouseService houseServiceImpl;
 
     private final PersonMapper personMapperImpl;
     private final HouseMapper houseMapperImpl;
-
-    private final Pager pager;
 
     /**
      * {@inheritDoc}
@@ -35,7 +41,7 @@ public class PersonServiceImpl implements PersonService {
     @Transactional(readOnly = true)
     @Override
     public GetPersonResponseDTO get(UUID personUUID) throws ServiceException {
-        return personMapperImpl.toGetPersonResponseDto(personDAOJPAImpl.findByUUID(personUUID)
+        return personMapperImpl.toGetPersonResponseDto(personRepository.findByUuid(personUUID)
                 .orElseThrow(ServiceException::new));
     }
 
@@ -44,9 +50,9 @@ public class PersonServiceImpl implements PersonService {
      */
     @Transactional(readOnly = true)
     @Override
-    public List<GetPersonResponseDTO> getAll(Paging paging) {
+    public List<GetPersonResponseDTO> getAll(Pageable pageable) {
         return personMapperImpl.toGetPersonResponseDTOs(
-                personDAOJPAImpl.findAll(paging));
+                personRepository.findAll(pageable).getContent());
     }
 
     /**
@@ -54,35 +60,65 @@ public class PersonServiceImpl implements PersonService {
      */
     @Transactional(readOnly = true)
     @Override
-    public List<GetHouseResponseDTO> getPossessingHouses(UUID personUUID, Paging paging) {
-        List<House> possessingHouses = personDAOJPAImpl.findByUUID(personUUID)
+    public List<GetHouseResponseDTO> getPossessingHouses(UUID personUUID, Pageable pageable) {
+        List<House> possessingHouses = personRepository.findByUuid(personUUID)
                 .orElseThrow(ServiceException::new)
                 .getPossessedHouses();
 
-        List<House> pagingPossessingHouses = (List<House>) pager.getPaginationResult(possessingHouses, paging);
+        List<House> pagingPossessingHouses = new PageImpl<>(possessingHouses, pageable, possessingHouses.size())
+                .getContent();
         return houseMapperImpl.toGetHouseResponseDTOs(pagingPossessingHouses);
     }
 
     /**
      * {@inheritDoc}
+     *
+     * @throws if finding passport, living house or
+     *            possessing houses error
      */
     @Transactional
     @Override
-    public GetPersonResponseDTO add(PostPutPersonRequestDTO postPutPersonRequestDTO) {
+    public GetPersonResponseDTO add(PostPutPersonRequestDTO postPutPersonRequestDTO) throws ServiceException {
+        Passport dbPassport = getPersonPassport(postPutPersonRequestDTO);
+
+        House dbLivingHouse = getPersonLivingHouse(postPutPersonRequestDTO);
+
+        List<House> possessedHouses = getPersonPossessedHouses(postPutPersonRequestDTO);
+
         return personMapperImpl.toGetPersonResponseDto(
-                personDAOJPAImpl.save(
-                        personMapperImpl.toPerson(postPutPersonRequestDTO)));
+                personRepository.save(
+                        personMapperImpl.toPerson(postPutPersonRequestDTO,
+                                dbPassport,
+                                dbLivingHouse,
+                                possessedHouses)));
     }
 
     /**
      * {@inheritDoc}
+     *
+     * @throws ServiceException if finding person, passport, living house or
+     *                          possessing houses error
      */
     @Transactional
     @Override
-    public GetPersonResponseDTO update(PostPutPersonRequestDTO postPutPersonRequestDTO) {
+    public GetPersonResponseDTO update(PostPutPersonRequestDTO postPutPersonRequestDTO) throws ServiceException {
+        Person dbPerson = personRepository.findByUuid(
+                        UUID.fromString(postPutPersonRequestDTO.uuid()))
+                .orElseThrow(ServiceException::new);
+
+        Passport dbPassport = getPersonPassport(postPutPersonRequestDTO);
+
+        House dbLivingHouse = getPersonLivingHouse(postPutPersonRequestDTO);
+
+        List<House> possessedHouses = getPersonPossessedHouses(postPutPersonRequestDTO);
+
         return personMapperImpl.toGetPersonResponseDto(
-                personDAOJPAImpl.update(
-                        personMapperImpl.toPerson(postPutPersonRequestDTO)));
+                personRepository.save(
+                        personMapperImpl.toPerson(dbPerson,
+                                postPutPersonRequestDTO,
+                                dbPassport,
+                                dbLivingHouse,
+                                possessedHouses)));
     }
 
     /**
@@ -91,6 +127,51 @@ public class PersonServiceImpl implements PersonService {
     @Transactional
     @Override
     public void remove(UUID personUUID) {
-        personDAOJPAImpl.delete(personUUID);
+        personRepository.deleteByUuid(personUUID);
+    }
+
+
+    /**
+     * Get passport from datasource
+     *
+     * @param postPutPersonRequestDTO request dto
+     * @return passport from datasource
+     * @throws ServiceException if not found
+     */
+    private Passport getPersonPassport(PostPutPersonRequestDTO postPutPersonRequestDTO) throws ServiceException {
+        return passportServiceImpl.getPassport(
+                UUID.fromString(postPutPersonRequestDTO.passportUUID()));
+    }
+
+    /**
+     * Get person living house from datasource
+     *
+     * @param postPutPersonRequestDTO request dto
+     * @return person living house
+     * @throws ServiceException if not found
+     */
+    private House getPersonLivingHouse(PostPutPersonRequestDTO postPutPersonRequestDTO) throws ServiceException {
+        return houseServiceImpl.getHouse(
+                UUID.fromString(postPutPersonRequestDTO.livingHouseUUID()));
+    }
+
+    /**
+     *
+     * Get person possessed houses or empty list if no possessing
+     *
+     * @param postPutPersonRequestDTO request dto
+     * @return person possessed houses
+     */
+    private List<House> getPersonPossessedHouses(PostPutPersonRequestDTO postPutPersonRequestDTO) {
+        List<House> possesingHouses = new ArrayList<>();
+        List<String> possessingHouseUUIDs = postPutPersonRequestDTO.possessingHouseUUIDs();
+
+        if (possessingHouseUUIDs != null && !possessingHouseUUIDs.isEmpty()) {
+            possesingHouses = postPutPersonRequestDTO.possessingHouseUUIDs().stream()
+                    .map(houseUUID -> houseServiceImpl.getHouse(UUID.fromString(houseUUID)))
+                    .toList();
+        }
+
+        return possesingHouses;
     }
 }

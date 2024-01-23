@@ -13,15 +13,4 @@ public class PropertiesConfig {
     YAMLParser yamlParser() {
         return new YAMLParser(PROPERTY_FILE);
     }
-
-    @Bean
-    PagingProperties pagingProperties(YAMLParser yamlParser) {
-        return PagingProperties.builder()
-                .defaultPageSize(Integer.parseInt(yamlParser.getProperty("paging",
-                        "defaultPageSize")))
-                .defaultPage(Integer.parseInt(yamlParser.getProperty("paging",
-                        "defaultPage")))
-                .build();
-    }
-
 }

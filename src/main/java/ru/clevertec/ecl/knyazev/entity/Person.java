@@ -2,7 +2,6 @@ package ru.clevertec.ecl.knyazev.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
@@ -18,13 +17,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.clevertec.ecl.knyazev.entity.listener.PersonListener;
+import ru.clevertec.ecl.knyazev.entity.type.PersonSex;
 
 import java.util.List;
 import java.util.UUID;
 
 @Entity
-@EntityListeners({PersonListener.class})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -45,7 +43,7 @@ public class Person {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private Sex sex;
+    private PersonSex sex;
 
     @OneToOne
     @JoinColumn(name = "passport_id", referencedColumnName = "id", nullable = false)
@@ -60,8 +58,4 @@ public class Person {
             joinColumns = {@JoinColumn(name = "person_id")},
             inverseJoinColumns = {@JoinColumn(name = "house_id")})
     private List<House> possessedHouses;
-
-    public static enum Sex {
-        male, female
-    }
 }

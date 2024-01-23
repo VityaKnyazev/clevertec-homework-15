@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
+@EnableJpaRepositories(basePackages = {"ru.clevertec.ecl.knyazev.repository"})
 @EnableTransactionManagement
 @EnableWebMvc
 public class AppConfig {

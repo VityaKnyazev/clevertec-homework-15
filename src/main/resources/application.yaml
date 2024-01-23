@@ -27,8 +27,3 @@ spring:
    liquibase:
       change-log: /db/liquibase/db-real-estate-changelog.xml
       enabled: true
-#old paging properties
-#TODO should be removed
-paging:
-   defaultPage: 1
-   defaultPageSize: 15

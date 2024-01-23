@@ -1,11 +1,12 @@
 package ru.clevertec.ecl.knyazev.controller;
 
-import java.util.Date;
-import java.util.Set;
-import java.util.stream.Collectors;
-
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.context.MessageSourceResolvable;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -21,13 +22,12 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import ru.clevertec.ecl.knyazev.dao.exception.DAOException;
+import ru.clevertec.ecl.knyazev.repository.exception.RepositoryException;
 import ru.clevertec.ecl.knyazev.service.exception.ServiceException;
+
+import java.util.Date;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class ExceptionController extends ResponseEntityExceptionHandler {
@@ -39,8 +39,15 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(value = {DAOException.class, ServiceException.class})
+    @ExceptionHandler(value = {RepositoryException.class, ServiceException.class})
     public ResponseEntity<ErrorMessage> handleLayerException(RuntimeException e) {
+        ErrorMessage message = new ErrorMessage(HttpStatus.BAD_REQUEST.value(), new Date(),
+                ErrorMessage.defaultError() + ": " + e.getMessage());
+        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = {DataAccessException.class})
+    public ResponseEntity<ErrorMessage> handleLayerException(DataAccessException e) {
         ErrorMessage message = new ErrorMessage(HttpStatus.BAD_REQUEST.value(), new Date(),
                 ErrorMessage.defaultError() + ": " + e.getMessage());
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);

@@ -1,6 +1,6 @@
 package ru.clevertec.ecl.knyazev.service;
 
-import ru.clevertec.ecl.knyazev.data.domain.pagination.Paging;
+import org.springframework.data.domain.Pageable;
 import ru.clevertec.ecl.knyazev.data.http.house.response.GetHouseResponseDTO;
 import ru.clevertec.ecl.knyazev.data.http.person.request.PostPutPersonRequestDTO;
 import ru.clevertec.ecl.knyazev.data.http.person.response.GetPersonResponseDTO;
@@ -24,21 +24,23 @@ public interface PersonService {
 
     /**
      * Get all person data transfer objects, also using pagination
+     * and sorting
      *
-     * @param paging query object
-     * @return all person DTOs by given paging object or empty list
+     * @param pageable query object
+     * @return all person DTOs by given pageable object or empty list
      */
-    List<GetPersonResponseDTO> getAll(Paging paging);
+    List<GetPersonResponseDTO> getAll(Pageable pageable);
 
     /**
-     * Get all house DTOs that person possessing, also using pagination
+     * Get all house DTOs that person possessing, also using paging
+     * and sorting
      *
      * @param personUUID person uuid
-     * @param paging     paging object data for pagination
+     * @param pageable     object data for pagination and sorting
      * @return all houses DTOs that person with given uuid possessing, also with pagination
-     * or empty list
+     * and sorting or empty list
      */
-    List<GetHouseResponseDTO> getPossessingHouses(UUID personUUID, Paging paging);
+    List<GetHouseResponseDTO> getPossessingHouses(UUID personUUID, Pageable pageable);
 
     /**
      * Add person using person DTO and get person DTO as

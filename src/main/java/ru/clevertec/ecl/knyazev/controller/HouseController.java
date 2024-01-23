@@ -1,9 +1,9 @@
 package ru.clevertec.ecl.knyazev.controller;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,9 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.clevertec.ecl.knyazev.config.PagingProperties;
-import ru.clevertec.ecl.knyazev.data.domain.pagination.Paging;
-import ru.clevertec.ecl.knyazev.data.domain.pagination.impl.PagingImpl;
 import ru.clevertec.ecl.knyazev.data.domain.searching.Searching;
 import ru.clevertec.ecl.knyazev.data.domain.searching.impl.SearchingImpl;
 import ru.clevertec.ecl.knyazev.data.http.house.request.PostPutHouseRequestDTO;
@@ -34,15 +31,13 @@ public class HouseController {
 
     private final HouseService houseServiceImpl;
 
-    private final PagingProperties pagingPropertiesImpl;
-
     @GetMapping("/{uuid}")
     public ResponseEntity<GetHouseResponseDTO> getHouse(@PathVariable(name = "uuid")
                                                         @Valid
                                                         @org.hibernate.validator.constraints.UUID(message =
                                                                 "house id must be uuid string in lower case")
                                                         String uuid) {
-        return ResponseEntity.ok(houseServiceImpl.get(UUID.fromString(uuid)));
+        return ResponseEntity.ok(houseServiceImpl.getHouseResponseDTO(UUID.fromString(uuid)));
     }
 
     @GetMapping("/{uuid}/persons")
@@ -51,18 +46,10 @@ public class HouseController {
                                                                             @org.hibernate.validator.constraints.UUID(message =
                                                                                     "house id must be uuid string in lower case")
                                                                             String uuid,
-                                                                            @RequestParam(required = false, name = "page")
-                                                                            @Valid
-                                                                            @Positive(message = "page number must be from 1")
-                                                                            Integer page,
-                                                                            @RequestParam(required = false, name = "page_size")
-                                                                            @Valid
-                                                                            @Positive(message = "page size must be from 1")
-                                                                            Integer pageSize) {
+                                                                            Pageable pageable) {
         UUID houseUUID = UUID.fromString(uuid);
-        Paging paging = new PagingImpl(page, pageSize, pagingPropertiesImpl);
 
-        return ResponseEntity.ok(houseServiceImpl.getLivingPersons(houseUUID, paging));
+        return ResponseEntity.ok(houseServiceImpl.getLivingPersons(houseUUID, pageable));
     }
 
     @GetMapping
@@ -73,18 +60,10 @@ public class HouseController {
                                                             message =
                                                             "search argument must have length from 3 to 50 symbols")
                                                     String search,
-                                                    @RequestParam(required = false, name = "page")
-                                                    @Valid
-                                                    @Positive(message = "page number must be from 1")
-                                                    Integer page,
-                                                    @RequestParam(required = false, name = "page_size")
-                                                    @Valid
-                                                    @Positive(message = "page size must be from 1")
-                                                    Integer pageSize) {
-        Paging paging = new PagingImpl(page, pageSize, pagingPropertiesImpl);
+                                                    Pageable pageable) {
         Searching searching = new SearchingImpl(search);
 
-        return ResponseEntity.ok(houseServiceImpl.getAll(paging, searching));
+        return ResponseEntity.ok(houseServiceImpl.getAll(pageable, searching));
     }
 
     @PostMapping
