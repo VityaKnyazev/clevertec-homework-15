@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,6 +19,7 @@ import ru.clevertec.ecl.knyazev.entity.type.PersonHouseType;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "persons_houses_history")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

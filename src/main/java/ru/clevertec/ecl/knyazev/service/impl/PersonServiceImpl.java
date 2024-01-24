@@ -22,6 +22,7 @@ import ru.clevertec.ecl.knyazev.service.exception.ServiceException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -169,7 +170,7 @@ public class PersonServiceImpl implements PersonService {
         if (possessingHouseUUIDs != null && !possessingHouseUUIDs.isEmpty()) {
             possesingHouses = postPutPersonRequestDTO.possessingHouseUUIDs().stream()
                     .map(houseUUID -> houseServiceImpl.getHouse(UUID.fromString(houseUUID)))
-                    .toList();
+                    .collect(Collectors.toCollection(ArrayList::new));
         }
 
         return possesingHouses;

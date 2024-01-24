@@ -39,8 +39,15 @@
                  stripComments="true" relativeToChangelogFile="true"/>
     </changeSet>
 
+
     <changeSet id="6" author="VityaKnyazev">
-        <tagDatabase tag="v-2.1_db_withAdditionalTableAndTriggers"/>
+        <sqlFile path="../fillPersonsHousesHistoryTableWithStartUpData.sql"
+                 encoding="UTF-8" endDelimiter=";" splitStatements="true"
+                 stripComments="true" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="7" author="VityaKnyazev">
+        <tagDatabase tag="v-2.1_db_withAdditionalTableWithDataAndTriggers"/>
     </changeSet>
 
 </databaseChangeLog>
