@@ -29,6 +29,7 @@ public abstract class RepositoryCacheProxy<K, V> {
      * repository
      * @throws Throwable if exception was thrown during execution
      */
+    @SuppressWarnings("unchecked")
     protected Object executeProxyMethod(Object realRepositoryInstance, Method method, Object[] args) throws Throwable {
         RepositoryMethod repositoryMethod = RepositoryMethod.findByName(method.getName());
 

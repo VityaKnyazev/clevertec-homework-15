@@ -8,6 +8,13 @@ plugins {
 
 ext {
     mapStructVersion = '1.5.5.Final'
+
+    testContainersVersion = '1.19.3'
+
+    mockitoVersion = '5.6.0'
+
+    assertjVersion = '3.24.2'
+    junitVersion = '5.9.2'
 }
 
 group = 'ru.clevertec.knyazev'
@@ -31,7 +38,16 @@ dependencies {
 
     implementation "org.liquibase:liquibase-core"
 
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "org.testcontainers:postgresql:$testContainersVersion"
+
+    testImplementation "org.mockito:mockito-junit-jupiter:$mockitoVersion"
+
+    testImplementation "org.assertj:assertj-core:$assertjVersion"
+
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
+    testImplementation "org.junit.jupiter:junit-jupiter-params:$junitVersion"
 }
 
 java {

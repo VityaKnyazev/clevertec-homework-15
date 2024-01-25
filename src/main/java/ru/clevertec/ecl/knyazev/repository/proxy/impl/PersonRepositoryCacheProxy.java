@@ -35,7 +35,11 @@ public class PersonRepositoryCacheProxy extends RepositoryCacheProxy<UUID, Perso
     @Override
     protected Optional<Person> whenFindByUuid(UUID uuid) {
         return cacheOperator.find(uuid)
-                .or(() -> personRepository.findByUuid(uuid));
+                .or(() -> {
+                    Optional<Person> dbPerson = personRepository.findByUuid(uuid);
+                    dbPerson.ifPresent(personDB -> cacheOperator.add(personDB.getUuid(), personDB));
+                    return dbPerson;
+                });
     }
 
     /**

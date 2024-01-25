@@ -3,6 +3,7 @@ package ru.clevertec.ecl.knyazev.repository.proxy.impl;
 import org.springframework.dao.DataAccessException;
 import ru.clevertec.ecl.knyazev.cache.operator.AbstractCacheOperator;
 import ru.clevertec.ecl.knyazev.entity.House;
+import ru.clevertec.ecl.knyazev.entity.Person;
 import ru.clevertec.ecl.knyazev.repository.HouseRepository;
 import ru.clevertec.ecl.knyazev.repository.proxy.RepositoryCacheProxy;
 
@@ -35,7 +36,11 @@ public class HouseRepositoryCacheProxy extends RepositoryCacheProxy<UUID, House>
     @Override
     protected Optional<House> whenFindByUuid(UUID uuid) {
         return cacheOperator.find(uuid)
-                .or(() -> houseRepository.findByUuid(uuid));
+                .or(() -> {
+                    Optional<House> dbHouse = houseRepository.findByUuid(uuid);
+                    dbHouse.ifPresent(houseDB -> cacheOperator.add(houseDB.getUuid(), houseDB));
+                    return dbHouse;
+                });
     }
 
     /**
