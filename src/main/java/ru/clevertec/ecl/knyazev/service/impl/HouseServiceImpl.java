@@ -1,6 +1,7 @@
 package ru.clevertec.ecl.knyazev.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,9 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@ConditionalOnProperty(prefix = "cache",
+        name = "enabled",
+        havingValue = "false")
 @RequiredArgsConstructor
 public class HouseServiceImpl implements HouseService {
 

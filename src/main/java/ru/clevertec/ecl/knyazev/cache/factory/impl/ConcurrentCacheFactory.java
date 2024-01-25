@@ -1,8 +1,10 @@
-package ru.clevertec.ecl.knyazev.cache.impl;
+package ru.clevertec.ecl.knyazev.cache.factory.impl;
 
-import ru.clevertec.ecl.knyazev.cache.AbstractCacheFactory;
+import ru.clevertec.ecl.knyazev.cache.factory.AbstractCacheFactory;
 import ru.clevertec.ecl.knyazev.cache.Cache;
 import ru.clevertec.ecl.knyazev.cache.exception.CacheException;
+import ru.clevertec.ecl.knyazev.cache.impl.LFUCache;
+import ru.clevertec.ecl.knyazev.cache.impl.LRUCache;
 
 import java.util.Collections;
 import java.util.HashMap;

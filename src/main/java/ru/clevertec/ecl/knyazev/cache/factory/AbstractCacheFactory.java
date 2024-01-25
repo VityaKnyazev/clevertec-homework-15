@@ -1,5 +1,6 @@
-package ru.clevertec.ecl.knyazev.cache;
+package ru.clevertec.ecl.knyazev.cache.factory;
 
+import ru.clevertec.ecl.knyazev.cache.Cache;
 import ru.clevertec.ecl.knyazev.cache.exception.CacheException;
 
 /**
