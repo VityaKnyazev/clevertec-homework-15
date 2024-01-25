@@ -1,223 +1,66 @@
-<h1>CLEVERTEC (homework-12)</h1>
+<h1>CLEVERTEC (homework-13)</h1>
 
-<p>CLEVERTEC homework-12 hibernate:</p>
-<p>Создать Web приложение учёта домов и жильцов</p>
-<p>Описание:</p>
+<p>CLEVERTEC homework-13 boot:</p>
+<p>Task</p>
+<p>Берём за основу существующее приложение и переезжаем на Spring boot 3.2.* в ветке feature/boot</p>
+
+<p>Добавляем сущность HouseHistory (id, house_id, person_id, date, type)</p>
 <ol>
-<li>2 сущности: House, Person</li>
-<li>Система должна предоставлять REST API для выполнения следующих операций:</li>
+<li>type [OWNER, TENANT]</li>
     <ul>
-        <li>CRUD для House. В GET запросах не выводить информацию о Person</li>
-        <li>CRUD для Person. В GET запросах не выводить информацию о House</li>
-        <li>Для GET операций использовать pagination (default size: 15).</li>
+        <li>Создать свой тип данных в БД</li>
+        <li>Хранить как enum в коде</li>
     </ul>
+<li>При смене места жительства добавляем запись в HouseHistory [type = TENANT], с текущей датой</li>
+<li>При смене владельца, добавляем запись в HouseHistory [type = OWNER], с текущей датой</li>
+<li>* Реализовать через триггер в БД</li>
+<li>* Если используется миграция, дописать новый changeset, а не исправлять существующие.</li>
 </ol>
 
-<p>House:</p>
+<p>Добавляем методы:</p>
 <ol>
-<li>У House обязаны быть поля id, uuid, area, country, city, street, number, create_date</li>
-<li>House может иметь множество жильцов (0-n).</li>
-<li>У House может быть множество владельцев (0-n).</li>
-<li>create_date устанавливается один раз при создании.</li>
+<li>GET для получения всех Person когда-либо проживавших в доме</li>
+<li>GET для получения всех Person когда-либо владевших домом</li>
+<li>GET для получения всех House где проживал Person</li>
+<li>GET для получения всех House которыми когда-либо владел Person</li>
 </ol>
 
-<p>Person</p>
+<p>Добавляем кэш из задания по рефлексии на сервисный слой House и Person.</p>
 <ol>
-<li>У Person обязаны быть id, uuid, name, surname, sex, passport_series, passport_number, create_date, update_date</li>
-<li>Person обязан жить только в одном доме и не может быть бездомным.</li>
-<li>Person не обязан владеть хоть одним домом и может владеть множеством домов.</li>
-<li>Сочетание passport_series и passport_number уникально.</li>
-<li>sex должен быть [Male, Female].</li>
-<li>Все связи обеспечить через id.</li>
-<li>Не возвращать id пользователям сервисов, для этого предназначено поле uuid</li>
-<li>create_date устанавливается один раз при создании.</li>
-<li>
-update_date устанавливается при создании и изменяется каждый раз, 
-когда меняется информация о Person. При этом, если запрос не изменяет 
-информации, поле не должно обновиться.
-</li>
-</ol>
-
-<p>Примечание:</p>
-<ol>
-<li>Ограничения и нормализацию сделать на своё усмотрение.</li>
-<li>Поля представлены для хранения в базе данных. В коде могут отличаться.</li>
-</ol>
-
-<p>Обязательно:</p>
-<ol>
-<li>GET для всех Person проживающих в House</li>
-<li>GET для всех House, владельцем которых является Person</li>
-<li>Конфигурационный файл: application.yml</li>
-<li>Скрипты для создания таблиц должны лежать в classpath:db/</li>
-<li>Добавить 5 домов и 10 жильцов (Один дом без жильцов, и как минимум в 1 доме больше 1 владельца)</li>
-</ol>
-
-<p>Дополнительно:</p>
-<ol>
-<li>*Добавить миграцию</li>
-<li>*Полнотекстовый поиск (любое текстовое поле) для House</li>
-<li>*Полнотекстовый поиск (любое текстовое поле) для Person</li>
-<li>*PATCH для Person и House</li>
-</ol>
-
-<p>Application requirements</p>
-
-<ol>
-<li>JDK version: 17 – use Streams, java.time.*, etc. where it is possible.</li>
-<li>Application packages root: ru.clevertec.ecl.</li>
-<li>Any widely-used connection pool could be used.</li>
-<li>Spring JDBC Template should be used for data access.</li>
-<li>Use transactions where it’s necessary.</li>
-<li>Java Code Convention is mandatory (exception: margin size – 120 chars).</li>
-<li>Build tool: Gradle, latest version.</li>
-<li>Web server: Apache Tomcat.</li>
-<li>Application container: Spring IoC. Spring Framework, the latest version.</li>
-<li>Database: PostgreSQL, latest version.</li>
-<li>Testing: JUnit 5.+, Mockito.</li>
-<li>Service layer should be covered with unit tests not less than 80%.</li>
-<li>
-Repository layer should be tested using integration tests with 
-an in-memory embedded database or testcontainers.
-</li>
-<li>As a mapper use Mapstruct.</li>
-<li>Use lombok.</li>
-</ol>
-
-<p>General requirements</p>
-
-<ol>
-<li>Code should be clean and should not contain any “developer-purpose” constructions.</li>
-<li>App should be designed and written with respect to OOD and SOLID principles.</li>
-<li>Code should contain valuable comments where appropriate.</li>
-<li>Public APIs should be documented (Javadoc).</li>
-<li>Clear layered structure should be used with responsibilities of each application layer defined.</li>
-<li>JSON should be used as a format of client-server communication messages.</li>
-<li>
-Convenient error/exception handling mechanism should be implemented: all errors should be meaningful on backend side. Example: handle 404 error:
-HTTP Status: 404
-response body    
-{
-“errorMessage”: “Requested resource not found (uuid = f4fe3df1-22cd-49ce-a54d-86f55a7f372e)”,
- “errorCode”: 40401
- }
-
-where *errorCode” is your custom code (it can be based on http status and requested resource - person or house)
-</li>
-</ol>
-
-<p>
-Application restrictions
-It is forbidden to use:
-</p>
-<ol>
-<li>Spring Boot.</li>
-<li>Spring Data Repositories.</li>
+<li>Добавляем Integration тесты, чтобы кэш работал в многопоточной среде.</li>
+<li>Делаем экзекутор на 6 потоков и параллельно вызываем сервисный слой (GET\POST\PUT\DELETE) и проверяем, что результат соответствует ожиданиям.</li>
+<li>Используем H2 или *testcontainers </li>
 </ol>
 
 <h2>Что сделано:</h2>
-<p>Создано Web приложение учёта домов и жильцов</p>
-<p>Описание:</p>
+<p>Взято за основу существующее приложение и переезжаем на Spring boot 3.2.* в ветке feature/boot</p>
+
+<p>Добавлена сущность HouseHistory (id, house_id, person_id, date, type)</p>
 <ol>
-<li>2 сущности: House, Person</li>
-<li>Система предоставляет REST API для выполнения следующих операций:</li>
+<li>type [OWNER, TENANT]</li>
     <ul>
-        <li>CRUD для House. В GET запросах не выводится информация о Person</li>
-        <li>CRUD для Person. В GET запросах не выводиться информация о House</li>
-        <li>Для GET операций использован pagination (default size: 15).</li>
+        <li>Создан свой тип данных в БД</li>
+        <li>Хранится как enum в коде</li>
     </ul>
+<li>При смене места жительства добавляется запись в HouseHistory [type = TENANT], с текущей датой</li>
+<li>При смене владельца, добавляется запись в HouseHistory [type = OWNER], с текущей датой</li>
+<li>* Реализовано через триггер в БД</li>
+<li>* Дописан новый changeset, а не исправлен существующие.</li>
 </ol>
 
-<p>House:</p>
+<p>Добавлены методы:</p>
 <ol>
-<li>У House есть поля id, uuid, area, country, city, street, number, create_date</li>
-<li>House может иметь множество жильцов (0-n).</li>
-<li>У House может быть множество владельцев (0-n).</li>
-<li>create_date устанавливается один раз при создании.</li>
+<li>GET для получения всех Person когда-либо проживавших в доме</li>
+<li>GET для получения всех Person когда-либо владевших домом</li>
+<li>GET для получения всех House где проживал Person</li>
+<li>GET для получения всех House которыми когда-либо владел Person</li>
 </ol>
 
-<p>Person</p>
+<p>Добавлен кэш из задания по рефлексии на сервисный слой House и Person.</p>
 <ol>
-<li>У Person есть id, uuid, name, surname, sex, passport_series, passport_number, create_date, update_date</li>
-<li>Person живет только в одном доме и не может быть бездомным.</li>
-<li>Person не обязан владеть хоть одним домом и может владеть множеством домов.</li>
-<li>Сочетание passport_series и passport_number уникально.</li>
-<li>sex только [Male, Female].</li>
-<li>Все связи через id.</li>
-<li>Не возвращаются id пользователям сервисов, для этого предназначено поле uuid</li>
-<li>create_date устанавливается один раз при создании.</li>
-<li>
-update_date устанавливается при создании и изменяется каждый раз, 
-когда меняется информация о Person Passport. При этом, если запрос не изменяет 
-информации, поле не обновиться.
-</li>
-</ol>
-
-<p>Примечание:</p>
-<ol>
-<li>Ограничения и нормализация сделана.</li>
-</ol>
-
-<p>Обязательно сделано:</p>
-<ol>
-<li>GET для всех Person проживающих в House</li>
-<li>GET для всех House, владельцем которых является Person</li>
-<li>Конфигурационный файл: application.yml</li>
-<li>Скрипты для создания таблиц лежат в classpath:db/</li>
-<li>Добавлены записи в таблицы (Один дом без жильцов, и как минимум в 1 доме больше 1 владельца)</li>
-</ol>
-
-<p>Дополнительно:</p>
-<ol>
-<li>*Добавлена миграция</li>
-</ol>
-
-<p>Application requirements</p>
-
-<ol>
-<li>JDK version: 17 – use Streams, java.time.*, etc. where it is possible.</li>
-<li>Application packages root: ru.clevertec.ecl.</li>
-<li>Hikari connection pool used.</li>
-<li>Spring JDBC Template used for data access (Only demonstration in PersonsHousesPossessingDAO).</li>
-<li>Using transactions where it’s necessary.</li>
-<li>Java Code Convention using (exception: margin size – 120 chars).</li>
-<li>Build tool: Gradle, latest version.</li>
-<li>Web server: Apache Tomcat.</li>
-<li>Application container: Spring IoC. Spring Framework, the latest version.</li>
-<li>Database: PostgreSQL, latest version.</li>
-<li>As a mapper using Mapstruct.</li>
-<li>Using lombok.</li>
-</ol>
-
-<p>General requirements</p>
-
-<ol>
-<li>Code mostly clean and not contain any “developer-purpose” constructions.</li>
-<li>App is designed and written with respect to OOD and SOLID principles.</li>
-<li>Code contains valuable comments where appropriate.</li>
-<li>Public APIs documented (Javadoc).</li>
-<li>Clear layered structure is used with responsibilities of each application layer defined.</li>
-<li>JSON is using as a format of client-server communication messages.</li>
-<li>
-Convenient error/exception handling mechanism should is implemented: all errors are meaningful on backend side. Example: handle 404 error:
-
-
-response body    
-{
-“statusCode”: statusCode,
-“timestamp”: timestamp,
-"message": "message"
-}
-</li>
-</ol>
-
-<p>
-Application restrictions
-It isn't using:
-</p>
-<ol>
-<li>Spring Boot.</li>
-<li>Spring Data Repositories.</li>
+<li>Добавляем Integration тесты, чтобы кэш работал в многопоточной среде.</li>
+<li>Делаем экзекутор на 6 потоков и параллельно вызываем сервисный слой (GET\POST\PUT\DELETE) и проверяем, что результат соответствует ожиданиям.</li>
+<li>Использован *testcontainers </li>
 </ol>
 
 
@@ -226,7 +69,7 @@ It isn't using:
 <ol>
 <li>Билдим проект: .\gradlew clean build</li>
 <li>Запускаем postgresql в docker: docker-compose up -d</li>
-<li>Запускаем liquibase и добавляем записи в таблицы: .\gradlew update</li>
+<li>Запускаем приложение в tomcat</li>
 </ol>
 
 <p>Проверяем работу приложения, используем postman.</p>
