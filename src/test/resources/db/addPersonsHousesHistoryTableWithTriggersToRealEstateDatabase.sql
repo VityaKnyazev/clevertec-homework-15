@@ -11,7 +11,6 @@ CREATE TABLE IF NOT EXISTS persons_houses_history
     date      TIMESTAMPTZ NOT NULL,
 
     PRIMARY KEY (id),
-    UNIQUE (person_id, house_id, type),
 
     CONSTRAINT fk_person
         FOREIGN KEY (person_id)
@@ -39,7 +38,7 @@ AS
     BEGIN
 
         IF TG_OP = update_op AND OLD <> NULL THEN
-            UPDATE houses_persons_history
+            UPDATE persons_houses_history
             SET person_id = NEW.persson_id,
                 house_id  = NEW.house_id,
                 date      = NOW()
@@ -47,7 +46,7 @@ AS
               AND house_id = OLD.house_id
               AND type = person_type;
         ELSEIF TG_OP = insert_op THEN
-            INSERT INTO houses_persons_history(uuid, person_id, house_id, type, date)
+            INSERT INTO persons_houses_history(uuid, person_id, house_id, type, date)
             VALUES (gen_random_uuid(),NEW.person_id, NEW.house_id, person_type, NOW());
         END IF;
 
@@ -70,7 +69,7 @@ AS
     BEGIN
 
         IF TG_OP = update_op THEN
-            UPDATE houses_persons_history
+            UPDATE persons_houses_history
             SET person_id = NEW.id,
                 house_id  = NEW.house_id,
                 date      = NOW()
@@ -78,7 +77,7 @@ AS
               AND house_id = OLD.house_id
               AND type = person_type;
         ELSEIF TG_OP = insert_op THEN
-            INSERT INTO houses_persons_history(uuid, person_id, house_id, type, date)
+            INSERT INTO persons_houses_history(uuid, person_id, house_id, type, date)
             VALUES (gen_random_uuid(), NEW.id, NEW.house_id, person_type, NOW());
         END IF;
 

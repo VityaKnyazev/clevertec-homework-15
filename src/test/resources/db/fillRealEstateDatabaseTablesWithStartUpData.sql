@@ -23,7 +23,6 @@ VALUES ('0929797a-e440-499e-905e-fa5e71bbe6de', 1, '2023-01-01'),
        ('b094669d-c9ff-4166-aca9-fc85fd89e6fe', 9, '2023-01-09'),
        ('4b736895-8c28-438c-b577-21b4479474ed', 10, '2023-01-10');
 
-
 INSERT INTO passport(uuid, passport_series, passport_number, create_date)
 VALUES ('9478e918-f6c5-4f46-b4aa-cbeb11eb714b', 'KB', '1234568', '2023-07-01'),
        ('8cd97277-2e0a-4eba-ab22-83c3d43ec1de', 'CD', '7890124', '2023-07-02'),
@@ -41,22 +40,15 @@ VALUES ('e45a120c-5c08-4715-bab5-740fc0cad9f5', 'John', 'Doe', 'male', 1, 1),
        ('285b3607-22be-47b0-8bbc-f1f20ee0c17b', 'Jane', 'Smith', 'female', 2, 2),
        ('45638d63-20b5-4335-9bc6-f678ad578dac', 'Bob', 'Johnson', 'male', 3, 3),
        ('c891fba1-ae84-4d1e-96b9-61616cf6b020', 'Alice', 'Williams', 'female', 4, 4),
-       ('d285046e-68f7-46b1-8bf9-d0c6e5b22148', 'David', 'Brown', 'male', 5, 5),
-       ('a8fe7952-8507-4ca0-ac90-eee7e4cc34b0', 'Emily', 'Davis', 'female', 6, 6),
-       ('c40459a3-5bdb-4027-8117-70ed9d701312', 'Michael', 'Miller', 'male', 7, 7),
-       ('9ecc6d50-3a37-4a79-9be6-5d4fe3635b66', 'Sarah', 'Wilson', 'female', 8, 8),
-       ('81a51b75-8ac3-464d-a924-6a7cb20fe424', 'Christopher', 'Moore', 'male', 9, 9),
-       ('5d16de20-33a8-4cab-b6b4-c7b324b947c0', 'Ava', 'Taylor', 'female', 10, 10);
-
+       ('d285046e-68f7-46b1-8bf9-d0c6e5b22148', 'David', 'Brown', 'male', 5, 5);
 
 INSERT INTO persons_houses_possessing(person_id, house_id)
 VALUES (1, 1),
        (1, 2),
        (2, 3),
-       (2, 4),
-       (2, 5),
-       (3, 6),
-       (4, 7),
-       (5, 8),
-       (5, 9),
-       (10, 10);
+       (2, 1),
+       (2, 2),
+       (3, 2),
+       (4, 3),
+       (5, 4),
+       (5, 5);

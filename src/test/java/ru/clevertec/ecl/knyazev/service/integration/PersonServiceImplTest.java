@@ -1,13 +1,22 @@
 package ru.clevertec.ecl.knyazev.service.integration;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.context.ActiveProfiles;
+import ru.clevertec.ecl.knyazev.cache.operator.AbstractCacheOperator;
 import ru.clevertec.ecl.knyazev.config.TestContainerInitializer;
+import ru.clevertec.ecl.knyazev.data.http.person.request.PostPutPersonRequestDTO;
+import ru.clevertec.ecl.knyazev.entity.Person;
 import ru.clevertec.ecl.knyazev.service.PersonService;
+import ru.clevertec.ecl.knyazev.util.integration.PersonIntegrationTestData;
 
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -16,8 +25,31 @@ public class PersonServiceImplTest extends TestContainerInitializer {
     @Autowired
     private PersonService personServiceImpl;
 
+    @SpyBean
+    private AbstractCacheOperator<UUID, Person> personCacheOperatorSpy;
+
     @Test
-    public void check() {
-        personServiceImpl.get(UUID.fromString("e45a120c-5c08-4715-bab5-740fc0cad9f5"));
+    public void checkPersonServiceOperationsWithEnabledCache() throws InterruptedException {
+        UUID getPersonUUID = PersonIntegrationTestData.personGettingUUID();
+        PostPutPersonRequestDTO personSavingRequestDTO = PersonIntegrationTestData.personSavingRequest();
+        PostPutPersonRequestDTO personUpdatingRequestDTO = PersonIntegrationTestData.personUpdatingRequest();
+        UUID deletingPersonUUID = PersonIntegrationTestData.personDeletingUUID();
+
+
+        ExecutorService executorService = Executors.newFixedThreadPool(6);
+
+        executorService.submit(() -> personServiceImpl.get(getPersonUUID));
+        executorService.submit(() -> personServiceImpl.add(personSavingRequestDTO));
+        executorService.submit(() -> personServiceImpl.update(personUpdatingRequestDTO));
+        executorService.submit(() -> personServiceImpl.remove(deletingPersonUUID));
+
+        executorService.awaitTermination(4L, TimeUnit.SECONDS);
+        executorService.shutdown();
+
+        Mockito.verify(personCacheOperatorSpy,Mockito.times(2))
+                .find(Mockito.any(UUID.class));
+        Mockito.verify(personCacheOperatorSpy, Mockito.times(3))
+                .add(Mockito.any(UUID.class), Mockito.any(Person.class));
+        Mockito.verify(personCacheOperatorSpy, Mockito.never()).delete(Mockito.any(UUID.class));
     }
 }
