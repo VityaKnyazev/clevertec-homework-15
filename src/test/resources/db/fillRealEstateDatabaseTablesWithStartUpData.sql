@@ -9,7 +9,8 @@ VALUES ('548f8b02-4f28-49af-864b-b50faa1c1438', 'Central', 'USA', 'New York', 'B
        ('b60ee80b-8163-4c7d-8d45-87ad7908d9b4', 'South', 'Brazil', 'Rio de Janeiro', 'Avenida Atlantica', 234),
        ('3d948e8e-dd3a-4ab6-a421-fcec24711641', 'East', 'Japan', 'Tokyo', 'Shibuya Crossing', 567),
        ('6ea9ae5b-cc24-40f4-b63e-e958829794db', 'West', 'Canada', 'Vancouver', 'Granville Street', 890),
-       ('f1a7308b-92bc-4a50-8559-7cb87a7a7436', 'Central', 'USA', 'Los Angeles', 'Hollywood Boulevard', 123);
+       ('f1a7308b-92bc-4a50-8559-7cb87a7a7436', 'Central', 'USA', 'Los Angeles', 'Hollywood Boulevard', 123),
+       ('63efdd52-1e58-4066-bde3-b9507f5499b3', 'South', 'Russia', 'Bratsk', 'Lenina', 58);
 
 INSERT INTO house(uuid, address_id, create_date)
 VALUES ('0929797a-e440-499e-905e-fa5e71bbe6de', 1, '2023-01-01'),

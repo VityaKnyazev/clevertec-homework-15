@@ -48,7 +48,7 @@ public class PersonServiceImplTest extends TestContainerInitializer {
 
         Mockito.verify(personCacheOperatorSpy,Mockito.times(2))
                 .find(Mockito.any(UUID.class));
-        Mockito.verify(personCacheOperatorSpy, Mockito.times(3))
+        Mockito.verify(personCacheOperatorSpy, Mockito.times(4))
                 .add(Mockito.any(UUID.class), Mockito.any(Person.class));
         Mockito.verify(personCacheOperatorSpy, Mockito.never()).delete(Mockito.any(UUID.class));
     }
