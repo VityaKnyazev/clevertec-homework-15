@@ -7,14 +7,11 @@ plugins {
 }
 
 ext {
+    swaggerVersion = '2.3.0'
+
     mapStructVersion = '1.5.5.Final'
 
     testContainersVersion = '1.19.3'
-
-    mockitoVersion = '5.6.0'
-
-    assertjVersion = '3.24.2'
-    junitVersion = '5.9.2'
 }
 
 group = 'ru.clevertec.knyazev'
@@ -28,6 +25,7 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-web"
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
     implementation "org.springframework.boot:spring-boot-starter-validation"
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:$swaggerVersion"
 
     implementation "org.postgresql:postgresql"
 
@@ -41,13 +39,13 @@ dependencies {
     testImplementation "org.springframework.boot:spring-boot-starter-test"
     testImplementation "org.testcontainers:postgresql:$testContainersVersion"
 
-    testImplementation "org.mockito:mockito-junit-jupiter:$mockitoVersion"
+    testImplementation "org.mockito:mockito-junit-jupiter"
 
-    testImplementation "org.assertj:assertj-core:$assertjVersion"
+    testImplementation "org.assertj:assertj-core"
 
-    testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
-    testImplementation "org.junit.jupiter:junit-jupiter-params:$junitVersion"
+    testImplementation "org.junit.jupiter:junit-jupiter-api"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+    testImplementation "org.junit.jupiter:junit-jupiter-params"
 }
 
 java {

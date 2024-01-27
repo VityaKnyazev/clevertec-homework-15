@@ -1,34 +1,54 @@
-#datasource config
 spring:
-   datasource:
-      driver-class-name: org.postgresql.Driver
-      url: jdbc:postgresql://localhost:5432/real_estate?useUnicode=true&characterEncoding=UTF-8
-      username: admin
-      password: admin
-      hikari:
-         maximum-pool-size: 3
-         connection-timeout: 3000
-         transaction-isolation: TRANSACTION_READ_COMMITTED
-#jpa config
-   jpa:
-      properties:
-         hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
-         hibernate.show_sql: true
-         hibernate.format_sql: false
-         hibernate.hbm2ddl.auto: none
-#pagination and sorting config
-   data:
-      rest:
-         page-param-name: page
-         limit-param-name: size
-         sort-param-name: sort
-         default-page-size: 15
-#liquibase config
-   liquibase:
-      change-log: /db/liquibase/db-real-estate-changelog.xml
-      enabled: true
+  profiles:
+    active: dev
+
+---
+
+springdoc:
+  api-docs:
+    path: /api-docs
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui
+    enabled: true
+  show-actuator: false
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+  #datasource config
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/real_estate?useUnicode=true&characterEncoding=UTF-8
+    username: admin
+    password: admin
+    hikari:
+      maximum-pool-size: 3
+      connection-timeout: 3000
+      transaction-isolation: TRANSACTION_READ_COMMITTED
+  #jpa config
+  jpa:
+    properties:
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+      hibernate.show_sql: true
+      hibernate.format_sql: false
+      hibernate.hbm2ddl.auto: none
+  #pagination and sorting config
+  data:
+    rest:
+      page-param-name: page
+      limit-param-name: size
+      sort-param-name: sort
+      default-page-size: 15
+  #liquibase config
+  liquibase:
+    change-log: /db/liquibase/db-real-estate-changelog.xml
+    enabled: true
 #cache config
 cache:
-   enabled: false
-   algorithm: LFU
-   size: 50
+  enabled: false
+  algorithm: LFU
+  size: 50
