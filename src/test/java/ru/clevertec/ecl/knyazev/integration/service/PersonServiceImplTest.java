@@ -1,4 +1,4 @@
-package ru.clevertec.ecl.knyazev.service.integration;
+package ru.clevertec.ecl.knyazev.integration.service;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -11,7 +11,7 @@ import ru.clevertec.ecl.knyazev.config.TestContainerInitializer;
 import ru.clevertec.ecl.knyazev.data.http.person.request.PostPutPersonRequestDTO;
 import ru.clevertec.ecl.knyazev.entity.Person;
 import ru.clevertec.ecl.knyazev.service.PersonService;
-import ru.clevertec.ecl.knyazev.util.integration.PersonIntegrationTestData;
+import ru.clevertec.ecl.knyazev.integration.util.PersonSerciceIntegrationTestData;
 
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
@@ -30,10 +30,10 @@ public class PersonServiceImplTest extends TestContainerInitializer {
 
     @Test
     public void checkPersonServiceOperationsWithEnabledCache() throws InterruptedException {
-        UUID getPersonUUID = PersonIntegrationTestData.personGettingUUID();
-        PostPutPersonRequestDTO personSavingRequestDTO = PersonIntegrationTestData.personSavingRequest();
-        PostPutPersonRequestDTO personUpdatingRequestDTO = PersonIntegrationTestData.personUpdatingRequest();
-        UUID deletingPersonUUID = PersonIntegrationTestData.personDeletingUUID();
+        UUID getPersonUUID = PersonSerciceIntegrationTestData.personGettingUUID();
+        PostPutPersonRequestDTO personSavingRequestDTO = PersonSerciceIntegrationTestData.personSavingRequest();
+        PostPutPersonRequestDTO personUpdatingRequestDTO = PersonSerciceIntegrationTestData.personUpdatingRequest();
+        UUID deletingPersonUUID = PersonSerciceIntegrationTestData.personDeletingUUID();
 
 
         ExecutorService executorService = Executors.newFixedThreadPool(6);

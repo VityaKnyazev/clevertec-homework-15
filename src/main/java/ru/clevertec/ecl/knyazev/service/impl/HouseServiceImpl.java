@@ -66,7 +66,7 @@ public class HouseServiceImpl implements HouseService {
 
         if (searching.useSearching() || pageable.getSort().isSorted()) {
             houses = addressServiceImpl.getAllAddresses(pageable, searching).stream()
-                    .map(address -> address.getHouse())
+                    .map(Address::getHouse)
                     .toList();
         } else {
             houses = houseRepository.findAll(pageable, searching).getContent();

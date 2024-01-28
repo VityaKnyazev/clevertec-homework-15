@@ -28,7 +28,7 @@ public class AddressServiceImpl implements AddressService {
      * {@inheritDoc}
      */
     @Override
-    public Address getAddress(UUID addressUUID) {
+    public Address getAddress(UUID addressUUID) throws ServiceException {
         return addressRepository.findByUuid(addressUUID)
                 .orElseThrow(ServiceException::new);
     }

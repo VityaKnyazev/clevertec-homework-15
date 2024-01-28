@@ -23,7 +23,7 @@ public interface AddressService {
      * @return address
      * @throws ServiceException when address not found
      */
-    Address getAddress(UUID addressUUID);
+    Address getAddress(UUID addressUUID) throws ServiceException;
 
     /**
      * Get address DTO by address uuid
