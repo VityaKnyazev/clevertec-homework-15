@@ -1,4 +1,4 @@
-package ru.clevertec.ecl.knyazev.service;
+package ru.clevertec.ecl.knyazev.service.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -29,6 +29,8 @@ import ru.clevertec.ecl.knyazev.mapper.HouseMapperImpl;
 import ru.clevertec.ecl.knyazev.mapper.PersonMapper;
 import ru.clevertec.ecl.knyazev.mapper.PersonMapperImpl;
 import ru.clevertec.ecl.knyazev.repository.PersonRepository;
+import ru.clevertec.ecl.knyazev.service.HouseService;
+import ru.clevertec.ecl.knyazev.service.PassportService;
 import ru.clevertec.ecl.knyazev.service.exception.ServiceException;
 import ru.clevertec.ecl.knyazev.service.impl.PersonServiceImpl;
 import ru.clevertec.ecl.knyazev.util.HouseServiceImplTestData;

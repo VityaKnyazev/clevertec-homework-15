@@ -1,4 +1,4 @@
-package ru.clevertec.ecl.knyazev.service;
+package ru.clevertec.ecl.knyazev.service.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -34,6 +34,7 @@ import ru.clevertec.ecl.knyazev.mapper.HouseMapperImpl;
 import ru.clevertec.ecl.knyazev.mapper.PersonMapper;
 import ru.clevertec.ecl.knyazev.mapper.PersonMapperImpl;
 import ru.clevertec.ecl.knyazev.repository.HouseRepository;
+import ru.clevertec.ecl.knyazev.service.AddressService;
 import ru.clevertec.ecl.knyazev.service.exception.ServiceException;
 import ru.clevertec.ecl.knyazev.service.impl.HouseServiceImpl;
 import ru.clevertec.ecl.knyazev.util.AddressServiceImplTestData;
@@ -152,7 +153,7 @@ public class HouseServiceImplTest {
         Page<House> expectedPageHouses = HouseServiceImplTestData.expectedPageHouses();
         int expectedGetHouseResponseDTOsSize = 1;
 
-        when(houseRepositoryMock.findAll(any(Pageable.class), any(Searching.class)))
+        when(houseRepositoryMock.findAll(any(Pageable.class)))
                 .thenReturn(expectedPageHouses);
 
         List<GetHouseResponseDTO> actualGetHouseResponseDTOs = houseServiceImpl.getAll(pageable, searching);

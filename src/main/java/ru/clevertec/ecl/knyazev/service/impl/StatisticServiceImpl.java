@@ -11,7 +11,7 @@ import ru.clevertec.ecl.knyazev.entity.HouseHistory;
 import ru.clevertec.ecl.knyazev.entity.type.PersonHouseType;
 import ru.clevertec.ecl.knyazev.mapper.HouseMapper;
 import ru.clevertec.ecl.knyazev.mapper.PersonMapper;
-import ru.clevertec.ecl.knyazev.repository.impl.HouseHistoryRepository;
+import ru.clevertec.ecl.knyazev.repository.HouseHistoryRepository;
 import ru.clevertec.ecl.knyazev.service.StatisticService;
 
 import java.util.UUID;

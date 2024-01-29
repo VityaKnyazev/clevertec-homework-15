@@ -1,4 +1,4 @@
-package ru.clevertec.ecl.knyazev.service;
+package ru.clevertec.ecl.knyazev.service.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;

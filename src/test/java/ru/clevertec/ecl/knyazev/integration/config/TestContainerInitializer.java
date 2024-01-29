@@ -1,4 +1,4 @@
-package ru.clevertec.ecl.knyazev.config;
+package ru.clevertec.ecl.knyazev.integration.config;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -25,10 +25,4 @@ public class TestContainerInitializer {
     static void startUp() {
         postgreSQLContainer.start();
     }
-
-    @AfterAll
-    static void shutDown() {
-        postgreSQLContainer.stop();
-    }
-
 }

@@ -16,6 +16,6 @@ public interface PassportRepository extends JpaRepository<Passport, Long> {
     Page<Passport> findAll(Pageable pageable);
 
     @Modifying
-    @Query(value = "DELETE FROM Address a WHERE a.uuid = :uuid")
+    @Query(value = "DELETE FROM Passport p WHERE p.uuid = :uuid")
     void deleteByUuid(UUID uuid);
 }

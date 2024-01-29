@@ -1,4 +1,4 @@
-package ru.clevertec.ecl.knyazev.integration.service;
+package ru.clevertec.ecl.knyazev.integration.service.impl;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.context.ActiveProfiles;
 import ru.clevertec.ecl.knyazev.cache.operator.AbstractCacheOperator;
-import ru.clevertec.ecl.knyazev.config.TestContainerInitializer;
+import ru.clevertec.ecl.knyazev.integration.config.TestContainerInitializer;
 import ru.clevertec.ecl.knyazev.data.http.person.request.PostPutPersonRequestDTO;
 import ru.clevertec.ecl.knyazev.entity.Person;
 import ru.clevertec.ecl.knyazev.service.PersonService;

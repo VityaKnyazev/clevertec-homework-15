@@ -69,7 +69,7 @@ public class HouseServiceImpl implements HouseService {
                     .map(Address::getHouse)
                     .toList();
         } else {
-            houses = houseRepository.findAll(pageable, searching).getContent();
+            houses = houseRepository.findAll(pageable).getContent();
         }
 
         return houseMapperImpl.toGetHouseResponseDTOs(houses);

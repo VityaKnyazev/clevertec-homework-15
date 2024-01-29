@@ -1,4 +1,4 @@
-package ru.clevertec.ecl.knyazev.repository.impl;
+package ru.clevertec.ecl.knyazev.repository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

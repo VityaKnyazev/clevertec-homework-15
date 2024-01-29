@@ -10,7 +10,12 @@ VALUES ('548f8b02-4f28-49af-864b-b50faa1c1438', 'Central', 'USA', 'New York', 'B
        ('3d948e8e-dd3a-4ab6-a421-fcec24711641', 'East', 'Japan', 'Tokyo', 'Shibuya Crossing', 567),
        ('6ea9ae5b-cc24-40f4-b63e-e958829794db', 'West', 'Canada', 'Vancouver', 'Granville Street', 890),
        ('f1a7308b-92bc-4a50-8559-7cb87a7a7436', 'Central', 'USA', 'Los Angeles', 'Hollywood Boulevard', 123),
-       ('63efdd52-1e58-4066-bde3-b9507f5499b3', 'South', 'Russia', 'Bratsk', 'Lenina', 58);
+       ('63efdd52-1e58-4066-bde3-b9507f5499b3', 'South', 'Russia', 'Bratsk', 'Lenina', 25),
+       ('cc54be96-f612-4cae-ab16-9abc36a73746', 'East', 'USA', 'Boston', 'Cherchelya', 74),
+       ('09c7d1ba-0bab-43dc-9ad7-16ba6c89a2d3', 'West', 'Russia', 'Moscow', 'Sadovodova', 63),
+       ('c94050ed-6b7d-4465-a9f2-0cbfff83eda0', 'South', 'Argentina', 'Rosario', 'Bono', 15),
+       ('62ae4afe-40e3-49e4-a559-3e8ae6af2aff', 'East', 'Canada', 'Ottava', 'Forest', 128),
+       ('bcb3c801-d3b1-438f-81c7-3a7c8bc69c6c', 'East', 'Canada', 'Toronto', 'Gena', 128);
 
 INSERT INTO house(uuid, address_id, create_date)
 VALUES ('0929797a-e440-499e-905e-fa5e71bbe6de', 1, '2023-01-01'),
@@ -41,7 +46,8 @@ VALUES ('e45a120c-5c08-4715-bab5-740fc0cad9f5', 'John', 'Doe', 'male', 1, 1),
        ('285b3607-22be-47b0-8bbc-f1f20ee0c17b', 'Jane', 'Smith', 'female', 2, 2),
        ('45638d63-20b5-4335-9bc6-f678ad578dac', 'Bob', 'Johnson', 'male', 3, 3),
        ('c891fba1-ae84-4d1e-96b9-61616cf6b020', 'Alice', 'Williams', 'female', 4, 4),
-       ('d285046e-68f7-46b1-8bf9-d0c6e5b22148', 'David', 'Brown', 'male', 5, 5);
+       ('d285046e-68f7-46b1-8bf9-d0c6e5b22148', 'David', 'Brown', 'male', 5, 5),
+       ('c31a5eea-41f0-4aed-98be-b49cd8440785', 'Sachiko', 'Blue', 'male', 6, 6);
 
 INSERT INTO persons_houses_possessing(person_id, house_id)
 VALUES (1, 1),

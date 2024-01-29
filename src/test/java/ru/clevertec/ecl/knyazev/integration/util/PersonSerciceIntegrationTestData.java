@@ -12,7 +12,7 @@ public class PersonSerciceIntegrationTestData {
 
     private static final String SAVING_PERSON_NAME = "Mikle";
     private static final String SAVING_PERSON_SURNAME = "Akimov";
-    private static final String SAVING_PERSON_PASSPORT_UUID = "4d184958-7a7f-4efa-adf2-1529b0c4b39c";
+    private static final String SAVING_PERSON_PASSPORT_UUID = "bb7fa7ee-e31b-4f9d-b9c5-684bdec38954";
     private static final String SAVING_PERSON_LIVING_HOUSE_UUID = "46d2e812-80cd-4485-9fec-b20496c24963";
     private static final List<String> SAVING_PERSON_POSSESSING_HOUSE_UUIDs = new ArrayList<>() {{
        add("46d2e812-80cd-4485-9fec-b20496c24963");
