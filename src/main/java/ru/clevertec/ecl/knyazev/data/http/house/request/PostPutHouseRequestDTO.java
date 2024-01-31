@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import org.hibernate.validator.constraints.UUID;
+import ru.clevertec.ecl.knyazev.validation.group.Update;
 
 /**
  * Represents House DTO that returns in
@@ -19,6 +20,7 @@ import org.hibernate.validator.constraints.UUID;
 public record PostPutHouseRequestDTO(
         @Schema(description = "House uuid. For POST method should be null",
                 example = "0929797a-e440-499e-905e-fa5e71bbe6de")
+        @NotNull(groups = {Update.class}, message = "House UUID must not be null")
         @UUID(message = "Invalid house UUID. Must be in lower case")
         String uuid,
 

@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -36,9 +35,8 @@ import ru.clevertec.ecl.knyazev.mapper.PersonMapperImpl;
 import ru.clevertec.ecl.knyazev.repository.HouseRepository;
 import ru.clevertec.ecl.knyazev.service.AddressService;
 import ru.clevertec.ecl.knyazev.service.exception.ServiceException;
-import ru.clevertec.ecl.knyazev.service.impl.HouseServiceImpl;
-import ru.clevertec.ecl.knyazev.util.AddressServiceImplTestData;
-import ru.clevertec.ecl.knyazev.util.HouseServiceImplTestData;
+import ru.clevertec.ecl.knyazev.util.AddressTestData;
+import ru.clevertec.ecl.knyazev.util.HouseTestData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +62,7 @@ public class HouseServiceImplTest {
 
     @Test
     public void checkGetHouseShouldReturnHouseByUUID() {
-        House expectedHouse = HouseServiceImplTestData.expectedHouse();
+        House expectedHouse = HouseTestData.expectedHouse();
 
 
         when(houseRepositoryMock.findByUuid(any(UUID.class)))
@@ -92,7 +90,7 @@ public class HouseServiceImplTest {
 
     @Test
     public void checkGetHouseResponseDTOShouldReturnHouseResponseDTO() {
-        House expectedHouse = HouseServiceImplTestData.expectedHouse();
+        House expectedHouse = HouseTestData.expectedHouse();
 
         when(houseRepositoryMock.findByUuid(any(UUID.class)))
                 .thenReturn(Optional.of(expectedHouse));
@@ -133,7 +131,7 @@ public class HouseServiceImplTest {
     @MethodSource("getDataForGetAllWithSortingAndSearching")
     public void checkGetAllShouldReturnAllHousesWithSortingAndSearching(Pageable pageable,
                                                                         Searching searching) {
-        List<Address> expectedAddresses = AddressServiceImplTestData.expectedPageAddresses().toList();
+        List<Address> expectedAddresses = AddressTestData.expectedPageAddresses().toList();
         int expectedGetHouseResponseDTOsSize = 1;
 
         when(addressServiceMock.getAllAddresses(any(Pageable.class),
@@ -150,7 +148,7 @@ public class HouseServiceImplTest {
     @MethodSource("getDataForGetAllWithPaging")
     public void checkGetAllShouldReturnAllHousesWithPaging(Pageable pageable,
                                                            Searching searching) {
-        Page<House> expectedPageHouses = HouseServiceImplTestData.expectedPageHouses();
+        Page<House> expectedPageHouses = HouseTestData.expectedPageHouses();
         int expectedGetHouseResponseDTOsSize = 1;
 
         when(houseRepositoryMock.findAll(any(Pageable.class)))
@@ -164,7 +162,7 @@ public class HouseServiceImplTest {
 
     @Test
     public void checkAddShouldReturnSavedGetHouseResponseDTO() {
-        Address expectedDbAddress = AddressServiceImplTestData.expectedAddress();
+        Address expectedDbAddress = AddressTestData.expectedAddress();
 
         when(addressServiceMock.getAddress(any(UUID.class)))
                 .thenReturn(expectedDbAddress);
@@ -203,9 +201,9 @@ public class HouseServiceImplTest {
     @Test
     public void checkUpdateShouldReturnUpdatedGetHouseResponseDTO() {
 
-        House expectedDbHouse = HouseServiceImplTestData.expectedHouse();
+        House expectedDbHouse = HouseTestData.expectedHouse();
 
-        Address replaceableAddress = AddressServiceImplTestData.replaceableAddress();
+        Address replaceableAddress = AddressTestData.replaceableAddress();
 
         when(houseRepositoryMock.findByUuid(any(UUID.class)))
                 .thenReturn(Optional.of(expectedDbHouse));
@@ -259,14 +257,11 @@ public class HouseServiceImplTest {
     public void checkRemoveShouldRemoveHouseByUUID() {
         ArgumentCaptor<UUID> uuidArgumentCaptor = ArgumentCaptor.forClass(UUID.class);
 
-        doNothing().
-                when(houseRepositoryMock).deleteByUuid(uuidArgumentCaptor.capture());
-
         UUID inputUUID = UUID.randomUUID();
 
         houseServiceImpl.remove(inputUUID);
 
-        verify(houseRepositoryMock).deleteByUuid(uuidArgumentCaptor.getValue());
+        verify(houseRepositoryMock).deleteByUuid(uuidArgumentCaptor.capture());
         assertThat(uuidArgumentCaptor.getValue()).isEqualTo(inputUUID);
     }
 

@@ -3,14 +3,17 @@ package ru.clevertec.ecl.knyazev.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import jakarta.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +29,7 @@ import ru.clevertec.ecl.knyazev.data.http.house.request.PostPutHouseRequestDTO;
 import ru.clevertec.ecl.knyazev.data.http.house.response.GetHouseResponseDTO;
 import ru.clevertec.ecl.knyazev.data.http.person.response.GetPersonResponseDTO;
 import ru.clevertec.ecl.knyazev.service.HouseService;
+import ru.clevertec.ecl.knyazev.validation.group.Update;
 
 import java.util.List;
 import java.util.UUID;
@@ -80,6 +84,8 @@ public class HouseController {
                                                             description = "parameter for searching on house text fields",
                                                             example = "West")
                                                         @Valid
+                                                        @NotBlank(
+                                                            message = "search argument must not be null or whitespaces")
                                                         @Size(min = 3,
                                                             max = 50,
                                                             message =
@@ -93,19 +99,21 @@ public class HouseController {
     }
 
     @Operation(summary = "Save house")
-    @ApiResponse(responseCode = "200", description = "Successfully saved")
+    @ApiResponse(responseCode = "201", description = "Successfully saved")
     @PostMapping
     public ResponseEntity<GetHouseResponseDTO> saveHouse(@RequestBody
                                                          @Valid
                                                          PostPutHouseRequestDTO postPutHouseRequestDTO) {
-        return ResponseEntity.ok(houseServiceImpl.add(postPutHouseRequestDTO));
+        return ResponseEntity
+                .status(HttpStatus.CREATED.value())
+                .body(houseServiceImpl.add(postPutHouseRequestDTO));
     }
 
     @Operation(summary = "Update house")
     @ApiResponse(responseCode = "200", description = "Successfully updated")
     @PutMapping
     public ResponseEntity<GetHouseResponseDTO> changeAllHouse(@RequestBody
-                                                              @Valid
+                                                              @Validated({Default.class, Update.class})
                                                               PostPutHouseRequestDTO postPutHouseRequestDTO) {
         return ResponseEntity.ok(houseServiceImpl.update(postPutHouseRequestDTO));
     }

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class PersonSerciceIntegrationTestData {
+public class PersonIntegrationTestData {
     private static final String EXISTING_PERSON_UUID = "e45a120c-5c08-4715-bab5-740fc0cad9f5";
 
     private static final String SAVING_PERSON_NAME = "Mikle";

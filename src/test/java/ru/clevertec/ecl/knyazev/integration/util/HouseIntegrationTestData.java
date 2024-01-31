@@ -4,7 +4,7 @@ import ru.clevertec.ecl.knyazev.data.http.house.request.PostPutHouseRequestDTO;
 
 import java.util.UUID;
 
-public class HouseServiceIntegrationTestData {
+public class HouseIntegrationTestData {
     private static final String EXISTING_HOUSE_UUID = "e14bdfad-2acd-4dbe-955b-8fddcbbcf388";
 
     private static final String SAVING_HOUSE_ADDRESS_UUID = "f1a7308b-92bc-4a50-8559-7cb87a7a7436";

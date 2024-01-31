@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -32,10 +31,9 @@ import ru.clevertec.ecl.knyazev.repository.PersonRepository;
 import ru.clevertec.ecl.knyazev.service.HouseService;
 import ru.clevertec.ecl.knyazev.service.PassportService;
 import ru.clevertec.ecl.knyazev.service.exception.ServiceException;
-import ru.clevertec.ecl.knyazev.service.impl.PersonServiceImpl;
-import ru.clevertec.ecl.knyazev.util.HouseServiceImplTestData;
-import ru.clevertec.ecl.knyazev.util.PassportServiceImplTestData;
-import ru.clevertec.ecl.knyazev.util.PersonServiceImplTestData;
+import ru.clevertec.ecl.knyazev.util.HouseTestData;
+import ru.clevertec.ecl.knyazev.util.PassportTestData;
+import ru.clevertec.ecl.knyazev.util.PersonTestData;
 
 import java.util.List;
 import java.util.Optional;
@@ -61,7 +59,7 @@ public class PersonServiceImplTest {
 
     @Test
     public void checkGetShouldReturnGetPersonResponseDTOByUUID() {
-        Person expectedPerson = PersonServiceImplTestData.expectedPerson();
+        Person expectedPerson = PersonTestData.expectedPerson();
 
         when(personRepositoryMock.findByUuid(any(UUID.class)))
                 .thenReturn(Optional.of(expectedPerson));
@@ -101,14 +99,14 @@ public class PersonServiceImplTest {
 
     @Test
     public void checkGetAllShouldReturnAllPersonsAlsoWithPaging() {
-        Page<Person> expectedPagePersons = PersonServiceImplTestData.expectedPagePersons();
+        Page<Person> expectedPagePersons = PersonTestData.expectedPagePersons();
         int expectedGetPassportResponseDTOsSize = 1;
 
         when(personRepositoryMock.findAll(any(Pageable.class)))
                 .thenReturn(expectedPagePersons);
 
-        Pageable pageableInput = PageRequest.of(PersonServiceImplTestData.PAGE_NUMBER,
-                PersonServiceImplTestData.PAGE_SIZE);
+        Pageable pageableInput = PageRequest.of(PersonTestData.PAGE_NUMBER,
+                PersonTestData.PAGE_SIZE);
         List<GetPersonResponseDTO> actualGetPersonResponseDTOs = personServiceImpl.getAll(pageableInput);
 
         assertAll(
@@ -131,9 +129,9 @@ public class PersonServiceImplTest {
 
     @Test
     public void checkAddShouldReturnSavedGetPersonResponseDTO() {
-        Passport expectedDbPassport = PassportServiceImplTestData.expectedPassport();
-        House expectedDbLivingHouse = HouseServiceImplTestData.expectedHouse();
-        House expectedDbPossessingHouse = HouseServiceImplTestData.expectedHouse();
+        Passport expectedDbPassport = PassportTestData.expectedPassport();
+        House expectedDbLivingHouse = HouseTestData.expectedHouse();
+        House expectedDbPossessingHouse = HouseTestData.expectedHouse();
 
         when(passportServiceImplMock.getPassport(any(UUID.class)))
                 .thenReturn(expectedDbPassport);
@@ -149,7 +147,7 @@ public class PersonServiceImplTest {
                 });
 
         PostPutPersonRequestDTO inputPostPersonRequestDTO =
-                PersonServiceImplTestData.inputPostPersonRequestDTO();
+                PersonTestData.inputPostPersonRequestDTO();
 
         GetPersonResponseDTO actualGetPersonResponseDTO = personServiceImpl.add(inputPostPersonRequestDTO);
 
@@ -173,11 +171,11 @@ public class PersonServiceImplTest {
 
     @Test
     public void checkUpdateShouldReturnUpdatedGetPersonResponseDTO() {
-        Person expectedUpdatingDbPerson = PersonServiceImplTestData.expectedPerson();
+        Person expectedUpdatingDbPerson = PersonTestData.expectedPerson();
 
-        Passport replaceableDbPassport = PassportServiceImplTestData.replaceablePassport();
-        House replaceableDbLivingHouse = HouseServiceImplTestData.replaceableHouse();
-        House replaceableDbPossessingHouse = HouseServiceImplTestData.replaceableHouse();
+        Passport replaceableDbPassport = PassportTestData.replaceablePassport();
+        House replaceableDbLivingHouse = HouseTestData.replaceableHouse();
+        House replaceableDbPossessingHouse = HouseTestData.replaceableHouse();
 
         when(personRepositoryMock.findByUuid(any(UUID.class)))
                 .thenReturn(Optional.of(expectedUpdatingDbPerson));
@@ -192,7 +190,7 @@ public class PersonServiceImplTest {
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
         PostPutPersonRequestDTO inputPutPersonRequestDTO =
-                PersonServiceImplTestData.inputPutPersonRequestDTO();
+                PersonTestData.inputPutPersonRequestDTO();
 
         GetPersonResponseDTO actualGetPersonResponseDTO = personServiceImpl.update(inputPutPersonRequestDTO);
 
@@ -221,7 +219,7 @@ public class PersonServiceImplTest {
                 .thenReturn(expectedUpdatingDbPerson);
 
         PostPutPersonRequestDTO inputPutPersonRequestDTO =
-                PersonServiceImplTestData.inputPutPersonRequestDTO();
+                PersonTestData.inputPutPersonRequestDTO();
 
         assertThatExceptionOfType(ServiceException.class)
                 .isThrownBy(() -> personServiceImpl.update(inputPutPersonRequestDTO));
@@ -231,14 +229,11 @@ public class PersonServiceImplTest {
     public void checkRemoveShouldRemovePassportByUUID() {
         ArgumentCaptor<UUID> uuidArgumentCaptor = ArgumentCaptor.forClass(UUID.class);
 
-        doNothing().
-                when(personRepositoryMock).deleteByUuid(uuidArgumentCaptor.capture());
-
         UUID inputUUID = UUID.randomUUID();
 
         personServiceImpl.remove(inputUUID);
 
-        verify(personRepositoryMock).deleteByUuid(uuidArgumentCaptor.getValue());
+        verify(personRepositoryMock).deleteByUuid(uuidArgumentCaptor.capture());
         assertThat(uuidArgumentCaptor.getValue()).isEqualTo(inputUUID);
     }
 }

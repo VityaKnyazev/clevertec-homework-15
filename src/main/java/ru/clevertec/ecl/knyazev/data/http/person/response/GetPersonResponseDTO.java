@@ -1,6 +1,7 @@
 package ru.clevertec.ecl.knyazev.data.http.person.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 
 /**
  * Represents Person DTO that returns in
@@ -18,6 +19,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * @param updateDate     person update date
  */
 @Schema(description = "Person DTO on response method GET")
+@Builder
 public record GetPersonResponseDTO(
         @Schema(description = "person uuid",
                 example = "285b3607-22be-47b0-8bbc-f1f20ee0c17b")

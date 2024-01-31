@@ -27,8 +27,7 @@ import ru.clevertec.ecl.knyazev.mapper.AddressMapper;
 import ru.clevertec.ecl.knyazev.mapper.AddressMapperImpl;
 import ru.clevertec.ecl.knyazev.repository.AddressRepository;
 import ru.clevertec.ecl.knyazev.service.exception.ServiceException;
-import ru.clevertec.ecl.knyazev.service.impl.AddressServiceImpl;
-import ru.clevertec.ecl.knyazev.util.AddressServiceImplTestData;
+import ru.clevertec.ecl.knyazev.util.AddressTestData;
 
 import java.util.List;
 import java.util.Optional;
@@ -47,7 +46,7 @@ public class AddressServiceImplTest {
 
     @Test
     public void checkGetAddressShouldReturnAddressByUUID() {
-        Address expectedAddress = AddressServiceImplTestData.expectedAddress();
+        Address expectedAddress = AddressTestData.expectedAddress();
 
         when(addressRepositoryMock.findByUuid(Mockito.any(UUID.class)))
                 .thenReturn(Optional.of(expectedAddress));
@@ -74,7 +73,7 @@ public class AddressServiceImplTest {
 
     @Test
     public void checkGetAddressResponseDTOShouldReturnAddressResponseDTO() {
-        Address expectedAddress = AddressServiceImplTestData.expectedAddress();
+        Address expectedAddress = AddressTestData.expectedAddress();
 
         when(addressRepositoryMock.findByUuid(Mockito.any(UUID.class)))
                 .thenReturn(Optional.of(expectedAddress));
@@ -111,14 +110,14 @@ public class AddressServiceImplTest {
 
     @Test
     public void checkGetAllAddressesShouldReturnAllAddressesAlsoWithPagingAndSearching() {
-        Page<Address> expectedAddresses = AddressServiceImplTestData.expectedPageAddresses();
+        Page<Address> expectedAddresses = AddressTestData.expectedPageAddresses();
 
         when(addressRepositoryMock.findAll(Mockito.any(Pageable.class), Mockito.any(Searching.class)))
                 .thenReturn(expectedAddresses);
 
-        Searching searchingInput = new SearchingImpl(AddressServiceImplTestData.SEARCHING_PARAM);
-        Pageable pageableInput = PageRequest.of(AddressServiceImplTestData.PAGE_NUMBER,
-                AddressServiceImplTestData.PAGE_SIZE);
+        Searching searchingInput = new SearchingImpl(AddressTestData.SEARCHING_PARAM);
+        Pageable pageableInput = PageRequest.of(AddressTestData.PAGE_NUMBER,
+                AddressTestData.PAGE_SIZE);
         List<Address> actualAddresses = addressServiceImpl.getAllAddresses(pageableInput, searchingInput);
 
         assertThat(actualAddresses).isNotNull()
@@ -128,15 +127,15 @@ public class AddressServiceImplTest {
 
     @Test
     public void checkGetAllAddressResponseDTOShouldReturnAllAddressResponseDTOsAlsoWithPagingAndSorting() {
-        Page<Address> expectedAddresses = AddressServiceImplTestData.expectedPageAddresses();
+        Page<Address> expectedAddresses = AddressTestData.expectedPageAddresses();
         int expectedGetAddressResponseDTOSize = 1;
 
         when(addressRepositoryMock.findAll(Mockito.any(Pageable.class), Mockito.any(Searching.class)))
                 .thenReturn(expectedAddresses);
 
-        Searching searchingInput = new SearchingImpl(AddressServiceImplTestData.SEARCHING_PARAM);
-        Pageable pageableInput = PageRequest.of(AddressServiceImplTestData.PAGE_NUMBER,
-                AddressServiceImplTestData.PAGE_SIZE);
+        Searching searchingInput = new SearchingImpl(AddressTestData.SEARCHING_PARAM);
+        Pageable pageableInput = PageRequest.of(AddressTestData.PAGE_NUMBER,
+                AddressTestData.PAGE_SIZE);
         List<GetAddressResponseDTO> actualGetAddressResponseDTOs =
                 addressServiceImpl.getAllAddressResponseDTO(pageableInput, searchingInput);
 
@@ -168,7 +167,7 @@ public class AddressServiceImplTest {
                 });
 
         PostPutAddressRequestDTO inputPostPutAddressRequestDTO =
-                AddressServiceImplTestData.inputPostAddressRequestDTO();
+                AddressTestData.inputPostAddressRequestDTO();
 
         GetAddressResponseDTO actualGetAddressResponseDTO = addressServiceImpl.add(inputPostPutAddressRequestDTO);
 
@@ -190,7 +189,7 @@ public class AddressServiceImplTest {
 
     @Test
     public void checkUpdateShouldReturnUpdatedGetAddressResponseDTO() {
-        Address expectedUpdatingDbAddress = AddressServiceImplTestData.expectedAddress();
+        Address expectedUpdatingDbAddress = AddressTestData.expectedAddress();
 
         when(addressRepositoryMock.findByUuid(Mockito.any(UUID.class)))
                 .thenReturn(Optional.of(expectedUpdatingDbAddress));
@@ -199,7 +198,7 @@ public class AddressServiceImplTest {
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
         PostPutAddressRequestDTO inputPostPutAddressRequestDTO =
-                AddressServiceImplTestData.inputPutAddressRequestDTO();
+                AddressTestData.inputPutAddressRequestDTO();
 
         GetAddressResponseDTO actualGetAddressResponseDTO = addressServiceImpl.update(inputPostPutAddressRequestDTO);
 
@@ -225,7 +224,7 @@ public class AddressServiceImplTest {
                 .thenReturn(expectedUpdatingDbAddress);
 
         PostPutAddressRequestDTO inputPostPutAddressRequestDTO =
-                AddressServiceImplTestData.inputPutAddressRequestDTO();
+                AddressTestData.inputPutAddressRequestDTO();
 
         assertThatExceptionOfType(ServiceException.class)
                 .isThrownBy(() -> addressServiceImpl.update(inputPostPutAddressRequestDTO));
@@ -234,15 +233,12 @@ public class AddressServiceImplTest {
     @Test
     public void checkRemoveShouldRemoveAddressByUUID() {
         ArgumentCaptor<UUID> uuidArgumentCaptor = ArgumentCaptor.forClass(UUID.class);
-        
-        doNothing().
-                when(addressRepositoryMock).deleteByUuid(uuidArgumentCaptor.capture());
 
         UUID inputUUID = UUID.randomUUID();
 
         addressServiceImpl.remove(inputUUID);
 
-        verify(addressRepositoryMock).deleteByUuid(uuidArgumentCaptor.getValue());
+        verify(addressRepositoryMock).deleteByUuid(uuidArgumentCaptor.capture());
         assertThat(uuidArgumentCaptor.getValue()).isEqualTo(inputUUID);
     }
 }

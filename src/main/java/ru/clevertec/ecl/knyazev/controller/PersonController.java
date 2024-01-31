@@ -6,10 +6,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +26,7 @@ import ru.clevertec.ecl.knyazev.data.http.house.response.GetHouseResponseDTO;
 import ru.clevertec.ecl.knyazev.data.http.person.request.PostPutPersonRequestDTO;
 import ru.clevertec.ecl.knyazev.data.http.person.response.GetPersonResponseDTO;
 import ru.clevertec.ecl.knyazev.service.PersonService;
+import ru.clevertec.ecl.knyazev.validation.group.Update;
 
 import java.util.List;
 import java.util.UUID;
@@ -77,19 +82,20 @@ public class PersonController {
     }
 
     @Operation(summary = "Save person")
-    @ApiResponse(responseCode = "200", description = "Successfully saved")
+    @ApiResponse(responseCode = "201", description = "Successfully saved")
     @PostMapping
     public ResponseEntity<GetPersonResponseDTO> savePerson(@RequestBody
                                                            @Valid
                                                            PostPutPersonRequestDTO postPutPersonRequestDTO) {
-        return ResponseEntity.ok(personServiceImpl.add(postPutPersonRequestDTO));
+        return ResponseEntity.status(HttpStatus.CREATED.value())
+                .body(personServiceImpl.add(postPutPersonRequestDTO));
     }
 
     @Operation(summary = "Update person")
     @ApiResponse(responseCode = "200", description = "Successfully updated")
     @PutMapping
     public ResponseEntity<GetPersonResponseDTO> changeAllPerson(@RequestBody
-                                                                 @Valid
+                                                                 @Validated({Default.class, Update.class})
                                                                  PostPutPersonRequestDTO postPutPersonRequestDTO) {
         return ResponseEntity.ok(personServiceImpl.update(postPutPersonRequestDTO));
     }
@@ -108,6 +114,6 @@ public class PersonController {
                                           String uuid) {
         personServiceImpl.remove(UUID.fromString(uuid));
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }

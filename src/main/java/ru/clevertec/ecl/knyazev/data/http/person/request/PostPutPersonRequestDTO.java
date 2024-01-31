@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import org.hibernate.validator.constraints.UUID;
 import ru.clevertec.ecl.knyazev.validation.constraint.ListUUID;
+import ru.clevertec.ecl.knyazev.validation.group.Update;
 
 import java.util.List;
 
@@ -30,6 +31,7 @@ import java.util.List;
 public record PostPutPersonRequestDTO(
         @Schema(description = "Person uuid. For POST method should be null",
                 example = "285b3607-22be-47b0-8bbc-f1f20ee0c17b")
+        @NotNull(groups = {Update.class}, message = "Person UUID must not be null")
         @UUID(message = "Invalid person UUID. Also must be in lower case")
         String uuid,
 

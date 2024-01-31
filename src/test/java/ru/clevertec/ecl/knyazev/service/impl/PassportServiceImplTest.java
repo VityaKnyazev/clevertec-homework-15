@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -26,9 +25,8 @@ import ru.clevertec.ecl.knyazev.mapper.PassportMapper;
 import ru.clevertec.ecl.knyazev.mapper.PassportMapperImpl;
 import ru.clevertec.ecl.knyazev.repository.PassportRepository;
 import ru.clevertec.ecl.knyazev.service.exception.ServiceException;
-import ru.clevertec.ecl.knyazev.service.impl.PassportServiceImpl;
-import ru.clevertec.ecl.knyazev.util.HouseServiceImplTestData;
-import ru.clevertec.ecl.knyazev.util.PassportServiceImplTestData;
+import ru.clevertec.ecl.knyazev.util.HouseTestData;
+import ru.clevertec.ecl.knyazev.util.PassportTestData;
 
 import java.util.List;
 import java.util.Optional;
@@ -47,7 +45,7 @@ public class PassportServiceImplTest {
 
     @Test
     public void checkGetPassportShouldReturnPassportByUUID() {
-        Passport expectedPassport = PassportServiceImplTestData.expectedPassport();
+        Passport expectedPassport = PassportTestData.expectedPassport();
 
         when(passportRepositoryMock.findByUuid(any(UUID.class)))
                 .thenReturn(Optional.of(expectedPassport));
@@ -74,7 +72,7 @@ public class PassportServiceImplTest {
 
     @Test
     public void checkGetPassportResponseDTOShouldReturnPassportResponseDTO() {
-        Passport expectedPassport = PassportServiceImplTestData.expectedPassport();
+        Passport expectedPassport = PassportTestData.expectedPassport();
 
         when(passportRepositoryMock.findByUuid(any(UUID.class)))
                 .thenReturn(Optional.of(expectedPassport));
@@ -107,14 +105,14 @@ public class PassportServiceImplTest {
 
     @Test
     public void checkGetAllShouldReturnAllPassportsAlsoWithPaging() {
-        Page<Passport> expectedPagePassports = PassportServiceImplTestData.expectedPagePassports();
+        Page<Passport> expectedPagePassports = PassportTestData.expectedPagePassports();
         int expectedGetPassportResponseDTOsSize = 1;
 
         when(passportRepositoryMock.findAll(any(Pageable.class)))
                 .thenReturn(expectedPagePassports);
 
-        Pageable pageableInput = PageRequest.of(HouseServiceImplTestData.PAGE_NUMBER,
-                HouseServiceImplTestData.PAGE_SIZE);
+        Pageable pageableInput = PageRequest.of(HouseTestData.PAGE_NUMBER,
+                HouseTestData.PAGE_SIZE);
         List<GetPassportResponseDTO> actualGetPassportResponseDTOs = passportServiceImpl.getAll(pageableInput);
 
         assertAll(
@@ -140,7 +138,7 @@ public class PassportServiceImplTest {
                 });
 
         PostPutPassportRequestDTO inputPostPassportRequestDTO =
-                PassportServiceImplTestData.inputPostPassportRequestDTO();
+                PassportTestData.inputPostPassportRequestDTO();
 
         GetPassportResponseDTO actualGetPassportResponseDTO = passportServiceImpl.add(inputPostPassportRequestDTO);
 
@@ -158,7 +156,7 @@ public class PassportServiceImplTest {
 
     @Test
     public void checkUpdateShouldReturnUpdatedGetPassportResponseDTO() {
-        Passport expectedUpdatingDbPassport = PassportServiceImplTestData.expectedPassport();
+        Passport expectedUpdatingDbPassport = PassportTestData.expectedPassport();
 
         when(passportRepositoryMock.findByUuid(any(UUID.class)))
                 .thenReturn(Optional.of(expectedUpdatingDbPassport));
@@ -167,7 +165,7 @@ public class PassportServiceImplTest {
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
         PostPutPassportRequestDTO inputPutPassportRequestDTO =
-                PassportServiceImplTestData.inputPutPassportRequestDTO();
+                PassportTestData.inputPutPassportRequestDTO();
 
         GetPassportResponseDTO actualGetPassportResponseDTO = passportServiceImpl.update(inputPutPassportRequestDTO);
 
@@ -192,7 +190,7 @@ public class PassportServiceImplTest {
                 .thenReturn(expectedUpdatingDbPassport);
 
         PostPutPassportRequestDTO inputPutPassportRequestDTO =
-                PassportServiceImplTestData.inputPutPassportRequestDTO();
+                PassportTestData.inputPutPassportRequestDTO();
 
         assertThatExceptionOfType(ServiceException.class)
                 .isThrownBy(() -> passportServiceImpl.update(inputPutPassportRequestDTO));
@@ -202,14 +200,11 @@ public class PassportServiceImplTest {
     public void checkRemoveShouldRemovePassportByUUID() {
         ArgumentCaptor<UUID> uuidArgumentCaptor = ArgumentCaptor.forClass(UUID.class);
 
-        doNothing().
-                when(passportRepositoryMock).deleteByUuid(uuidArgumentCaptor.capture());
-
         UUID inputUUID = UUID.randomUUID();
 
         passportServiceImpl.remove(inputUUID);
 
-        verify(passportRepositoryMock).deleteByUuid(uuidArgumentCaptor.getValue());
+        verify(passportRepositoryMock).deleteByUuid(uuidArgumentCaptor.capture());
         assertThat(uuidArgumentCaptor.getValue()).isEqualTo(inputUUID);
     }
 }

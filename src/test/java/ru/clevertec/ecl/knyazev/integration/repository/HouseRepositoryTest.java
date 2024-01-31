@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import jakarta.persistence.NoResultException;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
@@ -23,15 +23,14 @@ import java.util.UUID;
 @ActiveProfiles("test")
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@RequiredArgsConstructor
 public class HouseRepositoryTest extends TestContainerInitializer {
     private static final String FIND_BY_UUID_QUERY = "SELECT h FROM House h WHERE h.uuid = :uuid";
     private static final String FIND_ALL = "SELECT h FROM House h";
 
-    @Autowired
-    HouseRepository houseRepository;
+    private final HouseRepository houseRepository;
 
-    @Autowired
-    TestEntityManager testEntityManager;
+    private final TestEntityManager testEntityManager;
 
     @Test
     public void checkFindByUUIDShouldReturnHouse() {
