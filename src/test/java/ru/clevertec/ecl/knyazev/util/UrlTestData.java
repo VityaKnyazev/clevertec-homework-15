@@ -19,7 +19,19 @@ public class UrlTestData {
         return HOUSE_REQUEST_URL + "/" + houseUUID;
     }
 
+    public static String getPersonRequestUrl() {
+        return PERSON_REQUEST_URL;
+    }
+
+    public static String getPersonRequestUrl(String personUUID) {
+        return PERSON_REQUEST_URL + "/" + personUUID;
+    }
+
     public static String getHousePersonsRequestUrl(String houseUUID) {
         return HOUSE_REQUEST_URL + "/" + houseUUID + PERSON_REQUEST_URL;
+    }
+
+    public static String getPersonHousesRequestUrl(String personUUID) {
+        return PERSON_REQUEST_URL + "/" + personUUID + HOUSE_REQUEST_URL;
     }
 }

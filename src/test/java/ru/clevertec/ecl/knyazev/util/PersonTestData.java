@@ -73,6 +73,12 @@ public class PersonTestData {
                 .build();
     }
 
+    public static List<GetPersonResponseDTO> expectedPersonResponseDTOs() {
+        return List.of(
+                expectedPersonResponseDTO()
+        );
+    }
+
     public static Page<Person> expectedPagePersons() {
         Passport expectedPassport = PassportTestData.expectedPassport();
         House expectedLivingHouse = HouseTestData.expectedHouse();

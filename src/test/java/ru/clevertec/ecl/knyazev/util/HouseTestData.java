@@ -3,7 +3,6 @@ package ru.clevertec.ecl.knyazev.util;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import ru.clevertec.ecl.knyazev.data.http.address.request.PostPutAddressRequestDTO;
 import ru.clevertec.ecl.knyazev.data.http.address.response.GetAddressResponseDTO;
 import ru.clevertec.ecl.knyazev.data.http.house.request.PostPutHouseRequestDTO;
 import ru.clevertec.ecl.knyazev.data.http.house.response.GetHouseResponseDTO;
@@ -56,18 +55,8 @@ public class HouseTestData {
     }
 
     public static List<GetHouseResponseDTO> expectedHouseResponseDTOs() {
-        GetAddressResponseDTO getAddressResponseDTO = AddressTestData.expectedAddressResponseDTO();
-
         return List.of(
-                GetHouseResponseDTO.builder()
-                        .uuid(EXPECTED_AND_INPUT_OUTPUT_HOUSE_UUID)
-                        .area(getAddressResponseDTO.area())
-                        .country(getAddressResponseDTO.country())
-                        .city(getAddressResponseDTO.city())
-                        .street(getAddressResponseDTO.street())
-                        .number(Integer.valueOf(getAddressResponseDTO.number()))
-                        .createDate(LocalDateTime.now().toString())
-                        .build()
+                expectedHouseResponseDTO()
         );
     }
 

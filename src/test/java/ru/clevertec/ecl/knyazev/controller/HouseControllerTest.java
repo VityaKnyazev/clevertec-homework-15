@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -17,14 +18,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import ru.clevertec.ecl.knyazev.data.domain.searching.Searching;
@@ -139,7 +138,7 @@ public class HouseControllerTest {
 
         GetHouseResponseDTO expectedHouseResponseDTO = HouseTestData.expectedHouseResponseDTO();
 
-        when(houseServiceImplMock.add(Mockito.any(PostPutHouseRequestDTO.class)))
+        when(houseServiceImplMock.add(any(PostPutHouseRequestDTO.class)))
                 .thenReturn(expectedHouseResponseDTO);
 
         String jsonHouseInput = objectMapper.writeValueAsString(HouseTestData.inputPostHouseRequestDTO());
@@ -159,7 +158,8 @@ public class HouseControllerTest {
 
     @ParameterizedTest
     @MethodSource("getInvalidPostHouseRequestDTOs")
-    public void checkSaveHouseShouldReturnBadRequest(PostPutHouseRequestDTO invalidPostHouseRequestDTO) throws Exception {
+    public void checkSaveHouseShouldReturnBadRequest(PostPutHouseRequestDTO invalidPostHouseRequestDTO)
+            throws Exception {
         String houseUrl = UrlTestData.getHouseRequestUrl();
 
         String invalidPostHouseRequestDTOJson = objectMapper.writeValueAsString(
@@ -179,7 +179,7 @@ public class HouseControllerTest {
 
         GetHouseResponseDTO expectedHouseResponseDTO = HouseTestData.expectedHouseResponseDTO();
 
-        when(houseServiceImplMock.update(Mockito.any(PostPutHouseRequestDTO.class)))
+        when(houseServiceImplMock.update(any(PostPutHouseRequestDTO.class)))
                 .thenReturn(expectedHouseResponseDTO);
 
         String jsonHouseInput = objectMapper.writeValueAsString(HouseTestData.inputPutHouseRequestDTO());
@@ -199,7 +199,8 @@ public class HouseControllerTest {
 
     @ParameterizedTest
     @MethodSource("getInvalidPutHouseRequestDTOs")
-    public void checkUpdateHouseShouldReturnBadRequest(PostPutHouseRequestDTO invalidPutHouseRequestDTO) throws Exception {
+    public void checkUpdateHouseShouldReturnBadRequest(PostPutHouseRequestDTO invalidPutHouseRequestDTO)
+            throws Exception {
         String houseUrl = UrlTestData.getHouseRequestUrl();
 
         String invalidPutHouseRequestDTOJson = objectMapper.writeValueAsString(
@@ -217,16 +218,16 @@ public class HouseControllerTest {
     public void checkDeleteHouseShouldReturnNoContentStatus() throws Exception {
         ArgumentCaptor<UUID> uuidArgumentCaptor = ArgumentCaptor.forClass(UUID.class);
 
-        UUID expectedDeletingHouseUrlUUID = HouseTestData.expectedHouse().getUuid();
+        UUID expectedDeletingHouseUUID = HouseTestData.expectedHouse().getUuid();
         String deletingHouseUrl = UrlTestData.getHouseRequestUrl(
-                expectedDeletingHouseUrlUUID.toString());
+                expectedDeletingHouseUUID.toString());
 
-        mockMvc.perform(MockMvcRequestBuilders.delete(deletingHouseUrl))
+        mockMvc.perform(delete(deletingHouseUrl))
                 .andExpect(status().isNoContent());
 
         verify(houseServiceImplMock).remove(uuidArgumentCaptor.capture());
 
-        assertThat(uuidArgumentCaptor.getValue()).isEqualTo(expectedDeletingHouseUrlUUID);
+        assertThat(uuidArgumentCaptor.getValue()).isEqualTo(expectedDeletingHouseUUID);
     }
 
     @ParameterizedTest
@@ -290,23 +291,14 @@ public class HouseControllerTest {
     }
 
     private static Stream<PostPutHouseRequestDTO> getInvalidPutHouseRequestDTOs() {
-        return Stream.of(
-                PostPutHouseRequestDTO.builder()
-                        .uuid(null)
-                        .addressUUID("5cb284a7-a824-4473-b6dc-86d5114a3373")
-                        .build(),
-                PostPutHouseRequestDTO.builder()
-                        .uuid("128-57-155d55k151")
-                        .addressUUID("5cb284a7-a824-4473-b6dc-86d5114a3373")
-                        .build(),
-                PostPutHouseRequestDTO.builder()
-                        .uuid("450cac63-448e-4763-b7aa-85fac9f338e9")
-                        .addressUUID(null)
-                        .build(),
-                PostPutHouseRequestDTO.builder()
-                        .uuid("450cac63-448e-4763-b7aa-85fac9f338e9")
-                        .addressUUID("258f-1215155sd7-1222")
-                        .build()
+        return Stream.concat(
+                Stream.of(
+                        PostPutHouseRequestDTO.builder()
+                                .uuid(null)
+                                .addressUUID("5cb284a7-a824-4473-b6dc-86d5114a3373")
+                                .build()
+                ),
+                getInvalidPostHouseRequestDTOs()
         );
     }
 }
