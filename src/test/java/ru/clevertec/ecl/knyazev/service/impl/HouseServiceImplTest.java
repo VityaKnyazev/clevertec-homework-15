@@ -26,6 +26,7 @@ import ru.clevertec.ecl.knyazev.data.domain.searching.Searching;
 import ru.clevertec.ecl.knyazev.data.domain.searching.impl.SearchingImpl;
 import ru.clevertec.ecl.knyazev.data.http.house.request.PostPutHouseRequestDTO;
 import ru.clevertec.ecl.knyazev.data.http.house.response.GetHouseResponseDTO;
+import ru.clevertec.ecl.knyazev.data.http.person.response.GetPersonResponseDTO;
 import ru.clevertec.ecl.knyazev.entity.Address;
 import ru.clevertec.ecl.knyazev.entity.House;
 import ru.clevertec.ecl.knyazev.mapper.HouseMapper;
@@ -37,6 +38,7 @@ import ru.clevertec.ecl.knyazev.service.AddressService;
 import ru.clevertec.ecl.knyazev.service.exception.ServiceException;
 import ru.clevertec.ecl.knyazev.util.AddressTestData;
 import ru.clevertec.ecl.knyazev.util.HouseTestData;
+import ru.clevertec.ecl.knyazev.util.PersonTestData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -161,6 +163,39 @@ public class HouseServiceImplTest {
     }
 
     @Test
+    public void checkGetLivingPersonsShouldReturnPersonResponseDTOs() {
+        House expectedHouse = HouseTestData.expectedHouse();
+        expectedHouse.setLivingPersons(List.of(PersonTestData.expectedPerson()));
+
+        int expectedPersonResponseDTOsSize = 1;
+
+        when(houseRepositoryMock.findByUuid(any(UUID.class)))
+                .thenReturn(Optional.of(expectedHouse));
+
+        Pageable pageable = PageRequest.of(HouseTestData.PAGE_NUMBER, HouseTestData.PAGE_SIZE);
+        UUID inputHouseIUUID = expectedHouse.getUuid();
+
+        List<GetPersonResponseDTO> personResponseDTOs = houseServiceImpl
+                .getLivingPersons(inputHouseIUUID, pageable);
+
+        assertThat(personResponseDTOs).isNotNull()
+                .hasSize(expectedPersonResponseDTOsSize);
+    }
+
+    @Test
+    public void checkGetLivingPersonsShouldThrowServiceException() {
+
+        when(houseRepositoryMock.findByUuid(any(UUID.class)))
+                .thenThrow(ServiceException.class);
+
+        UUID inputHouseUUID = UUID.randomUUID();
+        Pageable pageable = Pageable.unpaged();
+
+        assertThatExceptionOfType(ServiceException.class)
+                .isThrownBy(() -> houseServiceImpl.getLivingPersons(inputHouseUUID, pageable));
+    }
+
+    @Test
     public void checkAddShouldReturnSavedGetHouseResponseDTO() {
         Address expectedDbAddress = AddressTestData.expectedAddress();
 
@@ -282,7 +317,7 @@ public class HouseServiceImplTest {
     private static Stream<Arguments> getDataForGetAllWithPaging() {
         return Stream.of(
                 Arguments.of(Pageable.unpaged(), new SearchingImpl(null)),
-                Arguments.of(PageRequest.of(0, 2, Sort.unsorted()),
+                Arguments.of(PageRequest.of(HouseTestData.PAGE_NUMBER, HouseTestData.PAGE_SIZE, Sort.unsorted()),
                         new SearchingImpl(null))
         );
     }

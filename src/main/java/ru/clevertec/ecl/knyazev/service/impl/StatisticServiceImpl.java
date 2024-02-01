@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.clevertec.ecl.knyazev.data.http.house.response.GetHouseResponseDTO;
 import ru.clevertec.ecl.knyazev.data.http.person.response.GetPersonResponseDTO;
 import ru.clevertec.ecl.knyazev.entity.HouseHistory;
@@ -25,6 +26,10 @@ public class StatisticServiceImpl implements StatisticService {
     private final PersonMapper personMapperImpl;
     private final HouseMapper houseMapperImpl;
 
+    /**
+     * {@inheritDoc}
+     */
+    @Transactional(readOnly = true)
     @Override
     public Page<GetPersonResponseDTO> getAllEverLivingPersonsInHouse(UUID houseUUID, Pageable pageable) {
         return getAllPersonsHistory(houseUUID,
@@ -32,6 +37,10 @@ public class StatisticServiceImpl implements StatisticService {
                 pageable);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Transactional(readOnly = true)
     @Override
     public Page<GetPersonResponseDTO> getAllEverHousePossessingPersons(UUID houseUUID, Pageable pageable) {
         return getAllPersonsHistory(houseUUID,
@@ -39,6 +48,10 @@ public class StatisticServiceImpl implements StatisticService {
                 pageable);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Transactional(readOnly = true)
     @Override
     public Page<GetHouseResponseDTO> getAllEverPersonLivingHouses(UUID personUUID, Pageable pageable) {
         return getAllHousesHistory(personUUID,
@@ -46,6 +59,10 @@ public class StatisticServiceImpl implements StatisticService {
                 pageable);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Transactional(readOnly = true)
     @Override
     public Page<GetHouseResponseDTO> getAllEverPersonPossessedHouses(UUID personUUID, Pageable pageable) {
         return getAllHousesHistory(personUUID,

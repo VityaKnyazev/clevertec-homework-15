@@ -18,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import ru.clevertec.ecl.knyazev.data.http.house.response.GetHouseResponseDTO;
 import ru.clevertec.ecl.knyazev.data.http.person.request.PostPutPersonRequestDTO;
 import ru.clevertec.ecl.knyazev.data.http.person.response.GetPersonResponseDTO;
 import ru.clevertec.ecl.knyazev.entity.House;
@@ -125,6 +126,54 @@ public class PersonServiceImplTest {
                 () -> assertThat(actualGetPersonResponseDTOs.stream().findFirst().get().createDate())
                         .isNotNull()
         );
+    }
+
+    @Test
+    public void checkGetPossessingHousesShouldReturnHouseResponseDTOs() {
+        Person expectedPerson = PersonTestData.expectedPerson();
+
+        when(personRepositoryMock.findByUuid(any(UUID.class)))
+                .thenReturn(Optional.of(expectedPerson));
+
+        Pageable pageableInput = PageRequest.of(PersonTestData.PAGE_NUMBER,
+                PersonTestData.PAGE_SIZE);
+        UUID inputUUID = expectedPerson.getUuid();
+
+        List<GetHouseResponseDTO> actualHouseResponseDTOs = personServiceImpl.getPossessingHouses(inputUUID,
+                pageableInput);
+
+        assertAll(
+                () -> assertThat(actualHouseResponseDTOs.stream().findFirst().get().area())
+                        .isEqualTo(expectedPerson.getPossessedHouses().stream().findFirst().get()
+                                .getAddress().getArea()),
+                () -> assertThat(actualHouseResponseDTOs.stream().findFirst().get().country())
+                        .isEqualTo(expectedPerson.getPossessedHouses().stream().findFirst().get()
+                                .getAddress().getCountry()),
+                () -> assertThat(actualHouseResponseDTOs.stream().findFirst().get().city())
+                        .isEqualTo(expectedPerson.getPossessedHouses().stream().findFirst().get()
+                                .getAddress().getCity()),
+                () -> assertThat(actualHouseResponseDTOs.stream().findFirst().get().street())
+                        .isEqualTo(expectedPerson.getPossessedHouses().stream().findFirst().get()
+                                .getAddress().getStreet()),
+                () -> assertThat(actualHouseResponseDTOs.stream().findFirst().get().number())
+                        .isEqualTo(expectedPerson.getPossessedHouses().stream().findFirst().get()
+                                .getAddress().getNumber()),
+                () -> assertThat(actualHouseResponseDTOs.stream().findFirst().get().createDate())
+                        .isNotNull()
+        );
+    }
+
+    @Test
+    public void checkGetPossessingHousesShouldThrowServiceException() {
+
+        when(personRepositoryMock.findByUuid(any(UUID.class)))
+                .thenThrow(ServiceException.class);
+
+        UUID inputUUID = UUID.randomUUID();
+        Pageable pageable = Pageable.unpaged();
+
+        assertThatExceptionOfType(ServiceException.class)
+                .isThrownBy(() -> personServiceImpl.getPossessingHouses(inputUUID, pageable));
     }
 
     @Test

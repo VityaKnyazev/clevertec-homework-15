@@ -8,6 +8,7 @@ import ru.clevertec.ecl.knyazev.data.http.house.request.PostPutHouseRequestDTO;
 import ru.clevertec.ecl.knyazev.data.http.house.response.GetHouseResponseDTO;
 import ru.clevertec.ecl.knyazev.entity.Address;
 import ru.clevertec.ecl.knyazev.entity.House;
+import ru.clevertec.ecl.knyazev.entity.Person;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -85,6 +86,23 @@ public class HouseTestData {
                         .id(EXPECTED_PAGE_HOUSE_ID)
                         .uuid(UUID.fromString(EXPECTED_PAGE_HOUSE_UUID))
                         .address(expectedAddress)
+                        .createDate(LocalDateTime.now())
+                        .build()
+        ), PageRequest.of(PAGE_NUMBER, PAGE_SIZE), TOTAL_ELEMENTS);
+    }
+
+    public static Page<GetHouseResponseDTO> expectedPageHouseResponseDTOs() {
+        Address expectedAddress = AddressTestData.expectedAddress();
+
+        return new PageImpl<>(List.of(
+                GetHouseResponseDTO.builder()
+                        .uuid(EXPECTED_PAGE_HOUSE_UUID)
+                        .area(expectedAddress.getArea())
+                        .country(expectedAddress.getCountry())
+                        .city(expectedAddress.getCity())
+                        .street(expectedAddress.getStreet())
+                        .number(expectedAddress.getNumber())
+                        .createDate(LocalDateTime.now().toString())
                         .build()
         ), PageRequest.of(PAGE_NUMBER, PAGE_SIZE), TOTAL_ELEMENTS);
     }

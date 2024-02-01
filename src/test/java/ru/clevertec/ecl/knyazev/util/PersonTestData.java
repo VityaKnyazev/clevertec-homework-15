@@ -98,6 +98,21 @@ public class PersonTestData {
         ), PageRequest.of(PAGE_NUMBER, PAGE_SIZE), TOTAL_ELEMENTS);
     }
 
+    public static PageImpl<GetPersonResponseDTO> expectedPagePersonResponseDTOs() {
+        Passport expectedPassport = PassportTestData.expectedPassport();
+
+        return new PageImpl<>(List.of(
+                GetPersonResponseDTO.builder()
+                        .uuid(EXPECTED_PAGE_PERSON_UUID)
+                        .name(EXPECTED_PAGE_PERSON_NAME)
+                        .surname(EXPECTED_PAGE_PERSON_SURNAME)
+                        .sex(EXPECTED_PAGE_PERSON_SEX.name())
+                        .passportSeries(expectedPassport.getPassportSeries())
+                        .passportNumber(expectedPassport.getPassportNumber())
+                        .build()
+        ), PageRequest.of(PAGE_NUMBER, PAGE_SIZE), TOTAL_ELEMENTS);
+    }
+
     public static PostPutPersonRequestDTO inputPostPersonRequestDTO() {
         return PostPutPersonRequestDTO.builder()
                 .name(EXPECTED_AND_INPUT_OUTPUT_PERSON_NAME)
