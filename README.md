@@ -82,3 +82,12 @@ DELETE:
 <p>
 2. Аналогично для House Controller.
 </p>
+
+<p>
+3. HTTP PATCH method (RFC 6902) for Address Controller 
+</p>
+<p>PATCH:</p>
+<p>http://localhost:8080/addresses/8ad957d6-9a44-4a6a-8789-0e3638bcb46c</p>
+<p>
+[{ "op": "replace", "path": "/city", "value": "Rome" }]
+</p>

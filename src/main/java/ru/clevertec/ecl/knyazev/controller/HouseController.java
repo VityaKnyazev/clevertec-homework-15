@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +44,7 @@ public class HouseController {
     @Operation(summary = "Get house response DTO by house uuid")
     @ApiResponse(responseCode = "200", description = "Successfully found")
     @GetMapping("/{uuid}")
-    public ResponseEntity<GetHouseResponseDTO> getHouse(@PathVariable(name = "uuid")
+    public ResponseEntity<GetHouseResponseDTO> getHouse(@PathVariable
                                                         @Parameter(name = "uuid",
                                                                 required = true,
                                                                 description = "House uuid",
@@ -60,7 +59,7 @@ public class HouseController {
     @Operation(summary = "Get living person response DTOs by house uuid")
     @ApiResponse(responseCode = "200", description = "Successfully found")
     @GetMapping("/{uuid}/persons")
-    public ResponseEntity<List<GetPersonResponseDTO>> getHouseLivingPersons(@PathVariable(name = "uuid")
+    public ResponseEntity<List<GetPersonResponseDTO>> getHouseLivingPersons(@PathVariable
                                                                 @Parameter(name = "uuid",
                                                                         required = true,
                                                                         description = "House uuid",
@@ -79,13 +78,11 @@ public class HouseController {
     @Operation(summary = "Get all houses response DTOs")
     @ApiResponse(responseCode = "200", description = "Successfully found")
     @GetMapping
-    public ResponseEntity<List<GetHouseResponseDTO>> getAllHouses(@RequestParam(required = false, name = "search")
+    public ResponseEntity<List<GetHouseResponseDTO>> getAllHouses(@RequestParam(required = false)
                                                         @Parameter(name = "search",
                                                             description = "parameter for searching on house text fields",
                                                             example = "West")
                                                         @Valid
-                                                        @NotBlank(
-                                                            message = "search argument must not be null or whitespaces")
                                                         @Size(min = 3,
                                                             max = 50,
                                                             message =
@@ -93,7 +90,9 @@ public class HouseController {
                                                         String search,
                                                         @ParameterObject
                                                         Pageable pageable) {
-        Searching searching = new SearchingImpl(search);
+        Searching searching = new SearchingImpl(search != null
+                                                ? search.strip()
+                                                : null);
 
         return ResponseEntity.ok(houseServiceImpl.getAll(pageable, searching));
     }
@@ -121,7 +120,7 @@ public class HouseController {
     @Operation(summary = "Delete house")
     @ApiResponse(responseCode = "204", description = "No content - successfully deleted")
     @DeleteMapping("/{uuid}")
-    public ResponseEntity<?> deleteHouse(@PathVariable(name = "uuid")
+    public ResponseEntity<?> deleteHouse(@PathVariable
                                          @Parameter(name = "uuid",
                                          required = true,
                                          description = "house uuid",

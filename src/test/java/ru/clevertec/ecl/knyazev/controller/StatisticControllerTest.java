@@ -14,12 +14,15 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import ru.clevertec.ecl.knyazev.data.http.house.response.GetHouseResponseDTO;
 import ru.clevertec.ecl.knyazev.data.http.person.response.GetPersonResponseDTO;
+import ru.clevertec.ecl.knyazev.filter.impl.AddressHTTPPatchFilter;
 import ru.clevertec.ecl.knyazev.service.StatisticService;
 import ru.clevertec.ecl.knyazev.util.HouseTestData;
 import ru.clevertec.ecl.knyazev.util.PersonTestData;
@@ -29,7 +32,9 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 
-@WebMvcTest(value = {StatisticController.class})
+@WebMvcTest(value = {StatisticController.class},
+        excludeFilters = {@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
+                                                value = {AddressHTTPPatchFilter.class})})
 @RequiredArgsConstructor
 public class StatisticControllerTest {
 

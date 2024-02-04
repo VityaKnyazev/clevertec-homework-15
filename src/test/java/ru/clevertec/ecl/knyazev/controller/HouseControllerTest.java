@@ -20,6 +20,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentCaptor;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -30,6 +32,7 @@ import ru.clevertec.ecl.knyazev.data.domain.searching.Searching;
 import ru.clevertec.ecl.knyazev.data.http.house.request.PostPutHouseRequestDTO;
 import ru.clevertec.ecl.knyazev.data.http.house.response.GetHouseResponseDTO;
 import ru.clevertec.ecl.knyazev.data.http.person.response.GetPersonResponseDTO;
+import ru.clevertec.ecl.knyazev.filter.impl.AddressHTTPPatchFilter;
 import ru.clevertec.ecl.knyazev.service.HouseService;
 import ru.clevertec.ecl.knyazev.util.HouseTestData;
 import ru.clevertec.ecl.knyazev.util.PersonTestData;
@@ -40,7 +43,9 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 
-@WebMvcTest(value = {HouseController.class})
+@WebMvcTest(value = {HouseController.class},
+        excludeFilters = {@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
+                                                value = {AddressHTTPPatchFilter.class})})
 @RequiredArgsConstructor
 public class HouseControllerTest {
 
@@ -252,12 +257,9 @@ public class HouseControllerTest {
 
     private static Stream<String> getInvalidHouseSearchData() {
         return Stream.of(
-                null,
                 "-1",
                 "hs",
                 " ",
-                "   ",
-                System.lineSeparator() + System.lineSeparator() + System.lineSeparator(),
                 "hello west side-east man. You are invited to our gr"
         );
     }

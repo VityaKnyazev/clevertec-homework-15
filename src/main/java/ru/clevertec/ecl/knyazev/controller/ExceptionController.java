@@ -1,5 +1,6 @@
 package ru.clevertec.ecl.knyazev.controller;
 
+import com.github.fge.jsonpatch.JsonPatchException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -38,6 +39,14 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
         ErrorMessage message = new ErrorMessage(HttpStatus.INTERNAL_SERVER_ERROR.value(), new Date(),
                 ErrorMessage.defaultError() + ": " + e.getMessage());
         return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(value = {JsonPatchException.class})
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ErrorMessage> handleJsonPatchException(RuntimeException e) {
+        ErrorMessage message = new ErrorMessage(HttpStatus.BAD_REQUEST.value(), new Date(),
+                ErrorMessage.defaultError() + ": " + e.getMessage());
+        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = {RepositoryException.class, ServiceException.class})

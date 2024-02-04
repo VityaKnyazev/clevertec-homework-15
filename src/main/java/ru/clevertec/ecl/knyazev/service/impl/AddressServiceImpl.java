@@ -3,7 +3,9 @@ package ru.clevertec.ecl.knyazev.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.clevertec.ecl.knyazev.data.domain.searching.Searching;
+import ru.clevertec.ecl.knyazev.data.http.address.request.PatchAddressRequestDTO;
 import ru.clevertec.ecl.knyazev.data.http.address.request.PostPutAddressRequestDTO;
 import ru.clevertec.ecl.knyazev.data.http.address.response.GetAddressResponseDTO;
 import ru.clevertec.ecl.knyazev.entity.Address;
@@ -39,6 +41,16 @@ public class AddressServiceImpl implements AddressService {
     @Override
     public GetAddressResponseDTO getAddressResponseDTO(UUID addressUUID) throws ServiceException {
         return addressMapperImpl.toGetAddressResponseDTO(addressRepository.findByUuid(addressUUID)
+                .orElseThrow(ServiceException::new));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Transactional(readOnly = true)
+    @Override
+    public PatchAddressRequestDTO patchAddressRequestDTO(UUID addressUUID) throws ServiceException {
+        return addressMapperImpl.toPatchAddressRequestDto(addressRepository.findByUuid(addressUUID)
                 .orElseThrow(ServiceException::new));
     }
 
@@ -84,6 +96,18 @@ public class AddressServiceImpl implements AddressService {
         return addressMapperImpl.toGetAddressResponseDTO(
                 addressRepository.save(
                         addressMapperImpl.toAddress(addressDB, postPutAddressRequestDTO)));
+    }
+
+    @Override
+    public GetAddressResponseDTO partialUpdate(UUID addressUUID, PatchAddressRequestDTO patchAddressRequestDTO) {
+        Address addressDB = addressRepository.findByUuid(addressUUID)
+                .orElseThrow(() -> new ServiceException(String.format("%s. %s",
+                        RepositoryException.SAVING_OR_UPDATING_ERROR,
+                        ServiceException.DEFAULT_ERROR_MESSAGE)));
+
+        return addressMapperImpl.toGetAddressResponseDTO(
+                addressRepository.save(
+                        addressMapperImpl.toAddress(addressDB, patchAddressRequestDTO)));
     }
 
     /**

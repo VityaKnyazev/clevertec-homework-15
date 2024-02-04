@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
@@ -36,6 +37,7 @@ public class StatisticController {
                                             description = "searching all ever living persons (tenants)" +
                                                  "in this house",
                                             example = "204647f0-caf6-45be-9512-acac4c628366")
+                                         @Valid
                                          @org.hibernate.validator.constraints.UUID(message =
                                          "house id where persons living must be uuid string in lower case")
                                          String uuid,
@@ -55,6 +57,7 @@ public class StatisticController {
                                                      description = "searching all ever possessing persons (owners)" +
                                                              "in this house",
                                                      example = "204647f0-caf6-45be-9512-acac4c628366")
+                                             @Valid
                                              @org.hibernate.validator.constraints.UUID(message =
                                              "house id that persons possessed must be uuid string in lower case")
                                              String uuid,
@@ -74,6 +77,7 @@ public class StatisticController {
                                                       description = "searching all houses that person (tenant)" +
                                                               "with given uuid living or lived",
                                                       example = "e45a120c-5c08-4715-bab5-740fc0cad9f5")
+                                              @Valid
                                               @org.hibernate.validator.constraints.UUID(message =
                                               "living person id must be uuid string in lower case")
                                               String uuid,
@@ -93,6 +97,7 @@ public class StatisticController {
                                                        description = "searching all houses that person (owner)" +
                                                                "with given uuid possessing or possessed",
                                                        example = "e45a120c-5c08-4715-bab5-740fc0cad9f5")
+                                               @Valid
                                                @org.hibernate.validator.constraints.UUID(message =
                                                "possessing person id must be uuid string in lower case")
                                                String uuid,

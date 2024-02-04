@@ -3,7 +3,6 @@ package ru.clevertec.ecl.knyazev.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.groups.Default;
@@ -11,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -42,7 +40,7 @@ public class PersonController {
     @Operation(summary = "Get person response DTO by person uuid")
     @ApiResponse(responseCode = "200", description = "Successfully found")
     @GetMapping("/{uuid}")
-    public ResponseEntity<GetPersonResponseDTO> getPerson(@PathVariable(name = "uuid")
+    public ResponseEntity<GetPersonResponseDTO> getPerson(@PathVariable
                                                           @Parameter(name = "uuid",
                                                                   required = true,
                                                                   description = "Person uuid",
@@ -57,7 +55,7 @@ public class PersonController {
     @Operation(summary = "Get person possessing houses response DTOs by person uuid")
     @ApiResponse(responseCode = "200", description = "Successfully found")
     @GetMapping("/{uuid}/houses")
-    public ResponseEntity<List<GetHouseResponseDTO>> getPersonPossessingHouses(@PathVariable(name = "uuid")
+    public ResponseEntity<List<GetHouseResponseDTO>> getPersonPossessingHouses(@PathVariable
                                                                @Parameter(name = "uuid",
                                                                       required = true,
                                                                       description = "Person uuid",
@@ -103,7 +101,7 @@ public class PersonController {
     @Operation(summary = "Delete person")
     @ApiResponse(responseCode = "204", description = "No content - successfully deleted")
     @DeleteMapping("/{uuid}")
-    public ResponseEntity<?> deletePerson(@PathVariable(name = "uuid")
+    public ResponseEntity<?> deletePerson(@PathVariable
                                           @Parameter(name = "uuid",
                                                   required = true,
                                                   description = "person uuid",
