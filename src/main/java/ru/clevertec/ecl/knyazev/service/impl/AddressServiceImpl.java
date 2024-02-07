@@ -57,6 +57,7 @@ public class AddressServiceImpl implements AddressService {
     /**
      * {@inheritDoc}
      */
+    @Transactional(readOnly = true)
     @Override
     public List<Address> getAllAddresses(Pageable pageable, Searching searching) {
         return addressRepository.findAll(pageable, searching).toList();
@@ -65,6 +66,7 @@ public class AddressServiceImpl implements AddressService {
     /**
      * {@inheritDoc}
      */
+    @Transactional(readOnly = true)
     @Override
     public List<GetAddressResponseDTO> getAllAddressResponseDTO(Pageable pageable, Searching searching) {
         return addressMapperImpl.toGetAddressResponseDTOs(
@@ -74,6 +76,7 @@ public class AddressServiceImpl implements AddressService {
     /**
      * {@inheritDoc}
      */
+    @Transactional
     @Override
     public GetAddressResponseDTO add(PostPutAddressRequestDTO postPutAddressRequestDTO) {
         return addressMapperImpl.toGetAddressResponseDTO(
@@ -84,6 +87,7 @@ public class AddressServiceImpl implements AddressService {
     /**
      * {@inheritDoc}
      */
+    @Transactional
     @Override
     public GetAddressResponseDTO update(PostPutAddressRequestDTO postPutAddressRequestDTO) {
 
@@ -98,6 +102,7 @@ public class AddressServiceImpl implements AddressService {
                         addressMapperImpl.toAddress(addressDB, postPutAddressRequestDTO)));
     }
 
+    @Transactional
     @Override
     public GetAddressResponseDTO partialUpdate(UUID addressUUID, PatchAddressRequestDTO patchAddressRequestDTO) {
         Address addressDB = addressRepository.findByUuid(addressUUID)
@@ -113,6 +118,7 @@ public class AddressServiceImpl implements AddressService {
     /**
      * {@inheritDoc}
      */
+    @Transactional(readOnly = true)
     @Override
     public void remove(UUID addressUUID) {
         addressRepository.deleteByUuid(addressUUID);
