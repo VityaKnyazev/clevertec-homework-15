@@ -1,2 +1,4 @@
-rootProject.name = 'homework-12'
-
+rootProject.name = 'homework-15-multiproject'
+include 'app'
+include 'spring-boot-starter-controller-logging'
+include 'spring-boot-starter-exception-handler'
