@@ -35,6 +35,7 @@ public class AddressHTTPPatchFilter extends AbstractHTTPPatchFilter {
      * @param uuid patch address request DTO uuid
      * @return patch address request DTO for executing PATCH HTTP method on it
      */
+    @SuppressWarnings("unchecked")
     @Override
     protected PatchAddressRequestDTO getPatchingDTO(@Valid
                                                    @NotNull(message = "address id must not be null")

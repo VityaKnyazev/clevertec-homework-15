@@ -7,6 +7,8 @@ plugins {
 }
 
 ext {
+    starterVersion = '0.0.1-SNAPSHOT'
+
     swaggerVersion = '2.3.0'
 
     jsonPatchVersion = '1.13'
@@ -29,6 +31,8 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
     implementation "org.springframework.boot:spring-boot-starter-validation"
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:$swaggerVersion"
+    implementation "ru.clevertec.ecl.knyazev:spring-boot-starter-controller-logging:$starterVersion"
+    implementation "ru.clevertec.ecl.knyazev:spring-boot-starter-exception-handler:$starterVersion"
 
     implementation "org.postgresql:postgresql"
 
@@ -58,3 +62,10 @@ java {
 test {
     useJUnitPlatform()
 }
+
+tasks.register('deleteLog', Delete) {
+    delete 'src/main/resources/logs'
+    delete 'build/resources/main/logs'
+}
+
+deleteLog.dependsOn test
