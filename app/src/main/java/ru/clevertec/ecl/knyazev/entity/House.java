@@ -6,6 +6,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
+import jakarta.persistence.NamedEntityGraphs;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
@@ -18,6 +21,13 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
+
+@NamedEntityGraph(
+        name = "House.address",
+        attributeNodes = {
+                @NamedAttributeNode(value = "address")
+        }
+)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

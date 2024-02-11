@@ -12,17 +12,26 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import ru.clevertec.ecl.knyazev.entity.type.PersonSex;
 
 import java.util.List;
 import java.util.UUID;
-
 @Entity
+@NamedEntityGraph(
+        name = "Person.passport",
+        attributeNodes = {
+                @NamedAttributeNode(value = "passport")
+        }
+)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
